@@ -508,7 +508,7 @@
             return code;
         }
 
-        const scriptCode = 'loadstring(game:HttpGet("https://getunx.vercel.app/UNXLoader.lua",true))()';
+        const scriptCode = 'loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua",true))()';
         document.getElementById('scriptText').innerHTML = highlightLua(scriptCode);
 
         function openModal(event) {
