@@ -1,385 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - UNXHub</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            line-height: 1.6;
-            position: relative;
-        }
-
-        /* Canvas for bouncing balls background */
-        #backgroundCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        /* Floating topbar */
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .topbar-title {
-            font-size: 1.5rem;
-            font-weight: 100;
-            color: #ffffff;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        .menu-toggle:hover {
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        .menu-toggle svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Menu dropdown */
-        .menu-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 2rem;
-            background: rgba(30, 30, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0 0 12px 12px;
-            display: none;
-            flex-direction: column;
-            min-width: 200px;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .menu-dropdown.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .menu-item {
-            padding: 1rem 1.5rem;
-            color: #ffffff;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s;
-            font-size: 1rem;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .menu-item:hover {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-        }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-item svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 6rem 2rem 4rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-            letter-spacing: -0.02em;
-        }
-
-        .tagline {
-            font-size: 1.25rem;
-            font-weight: 200;
-            color: #a0a0a0;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .tos-section {
-            margin-bottom: 3rem;
-            text-align: left;
-            background: rgba(13, 13, 13, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s;
-        }
-
-        .tos-section:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .tos-section h2 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .tos-section h2 i {
-            width: 24px;
-            height: 24px;
-            color: #3b82f6;
-        }
-
-        .tos-section p,
-        .tos-section ul {
-            color: #ffffff;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .tos-section ul {
-            padding-left: 2rem;
-        }
-
-        .tos-section li {
-            margin-bottom: 0.5rem;
-        }
-
-        .tos-section a {
-            color: #3b82f6;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
-            transition: all 0.2s;
-        }
-
-        .tos-section a:hover {
-            border-bottom-color: #3b82f6;
-        }
-
-        .last-updated {
-            text-align: center;
-            color: #a0a0a0;
-            font-size: 0.875rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 6rem 1rem 4rem;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .topbar {
-                padding: 1rem;
-            }
-
-            .topbar-title {
-                font-size: 1.25rem;
-            }
-
-            .menu-dropdown {
-                right: 1rem;
-            }
-
-            .tos-section {
-                padding: 1.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service - UNXHub</title>
+<style>
+:root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
+@keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
+.topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:340px;transition:all .3s}
+.topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
+.topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
+.topbar-logo img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 16px rgba(146,3,255,.4)}
+.hamburger{width:28px;height:28px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;transition:.3s}
+.hamburger span{width:100%;height:2px;background:#fff;border-radius:1px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+.menu-items{display:none;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
+.topbar.open .menu-items{display:flex}
+.menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
+.menu-item:hover{opacity:.7}
+.menu-item img{width:20px;height:20px;filter:invert(1)}
+.content{padding-top:140px;max-width:1200px;margin:0 auto;padding-left:2rem;padding-right:2rem;padding-bottom:8rem;position:relative;z-index:1}
+h1{font-size:4.5rem;font-weight:800;text-align:center;margin-bottom:1rem;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(146,3,255,.4))}
+.tagline{font-size:1.4rem;color:#aaa;text-align:center;margin-bottom:4rem}
+.tos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:2rem}
+.tos-section{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:all .3s;overflow:hidden}
+.tos-section:hover{border-color:var(--primary);transform:translateY(-8px);box-shadow:0 20px 50px rgba(146,3,255,.2)}
+.tos-section h2{font-size:1.8rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:14px;color:var(--primary)}
+.tos-section h2 img{width:28px;height:28px;filter:invert(1)}
+.tos-section p,.tos-section li{color:#ddd;font-size:1.05rem;line-height:1.8;margin-bottom:1rem}
+.tos-section ul{padding-left:2.2rem}
+.tos-section li{margin-bottom:.8rem}
+.tos-section a{color:#fff;background:linear-gradient(135deg,#9203ff,#4a00e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+.tos-section a:hover{opacity:.8}
+.last-updated{text-align:center;color:#777;font-size:1rem;margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)}
+.back-home{margin-top:4rem;text-align:center}
+.back-home-btn{display:inline-block;padding:1.2rem 3rem;background:var(--primary);color:#fff;font-weight:700;border-radius:16px;box-shadow:0 10px 30px rgba(146,3,255,.4);transition:all .3s}
+.back-home-btn:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(146,3,255,.6)}
+@media(max-width:768px){
+h1{font-size:3rem}
+.content{padding-top:160px;padding-left:1rem;padding-right:1rem}
+.tos-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-    <!-- Floating topbar -->
-    <nav class="topbar">
-        <div class="topbar-title">UNXHub</div>
-        <button class="menu-toggle" id="menuToggle">
-            <i data-lucide="menu"></i>
-        </button>
-        <div class="menu-dropdown" id="menuDropdown">
-            <a href="/" class="menu-item">
-                <i data-lucide="home"></i>
-                <span>Home</span>
-            </a>
-            <a href="/tos" class="menu-item">
-                <i data-lucide="file-text"></i>
-                <span>Terms Of Service</span>
-            </a>
-        </div>
-    </nav>
 
-    <!-- Canvas for animated background -->
-    <canvas id="backgroundCanvas"></canvas>
+<nav class="topbar" id="topbar">
+<div class="topbar-logo">
+<img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="UNXHub">
+<span>UNXHub</span>
+</div>
+<div class="hamburger" onclick="document.getElementById('topbar').classList.toggle('open')">
+<span></span><span></span><span></span>
+</div>
+<div class="menu-items">
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
+<img src="https://unpkg.com/lucide-static@latest/icons/home.svg"> Home
+</div>
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
+<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Terms of Service
+</div>
+</div>
+</nav>
 
-    <div class="container">
-        <h1>Terms of Service</h1>
-        <p class="tagline">Effective Date: October 25, 2025</p>
+<main class="content">
+<h1>Terms of Service</h1>
+<p class="tagline">Effective Date: November 20, 2025</p>
 
-        <div class="tos-section">
-            <h2><i data-lucide="file-text"></i>Introduction</h2>
-            <p>Welcome to UNXHub ("Service"), a fast and open-source script hub ("we," "us," or "our"). By accessing or using the Service, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the Service.</p>
-            <p>UNXHub is provided "as is" and is licensed under the MIT License for its open-source components. These Terms apply specifically to your use of the hosted Service.</p>
-        </div>
+<div class="tos-grid">
+<div class="tos-section">
+<h2><img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Introduction</h2>
+<p>Welcome to UNXHub ("Service"), a fast and open-source script hub. By accessing or using the Service, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the Service.</p>
+<p>UNXHub is provided "as is" and is licensed under the MIT License for its open-source components. These Terms apply specifically to your use of the hosted Service.</p>
+</div>
 
-        <div class="tos-section">
-            <h2><i data-lucide="shield"></i>Use of the Service</h2>
-            <ul>
-                <li>You may use the Service to access, download, and execute scripts provided through UNXHub.</li>
-                <li>All scripts are provided under the MIT License unless otherwise specified. You are responsible for reviewing and complying with individual script licenses.</li>
-                <li>You can use the scripts for learning purposes, no need for credit.</li>
-            </ul>
-        </div>
+<div class="tos-section">
+<h2><img src="https://unpkg.com/lucide-static@latest/icons/shield.svg"> Use of the Service</h2>
+<ul>
+<li>You may use the Service to access, download, and execute scripts provided through UNXHub.</li>
+<li>All scripts are provided under the MIT License unless otherwise specified.</li>
+<li>You can use the scripts for learning purposes — no credit required.</li>
+</ul>
+</div>
 
-        <div class="tos-section">
-            <h2><i data-lucide="github"></i>Intellectual Property</h2>
-            <p>The Service, including its design and non-open-source elements, is owned by us. Open-source components are licensed under the MIT License. You may not claim ownership of any part of the Service. By using the Service, you grant us a non-exclusive, royalty-free license to any user-generated content you submit (e.g., feedback or bug reports).</p>
-        </div>
+<div class="tos-section">
+<h2><img src="https://unpkg.com/lucide-static@latest/icons/github.svg"> Intellectual Property</h2>
+<p>The Service, including its design and non-open-source elements, is owned by us. Open-source components are licensed under the MIT License. You may not claim ownership of any part of the Service.</p>
+</div>
 
-        <div class="tos-section">
-            <h2><i data-lucide="alert-triangle"></i>Disclaimers and Liability</h2>
-            <p>The Service is provided "as is" without warranties of any kind. We do not guarantee the accuracy, security, or safety of any scripts. Scripts are provided to you as-is, with no guarantee that they will not be terminated or broken by game updates, anti-cheat systems, or Roblox enforcement soon or later. You use scripts at your own risk, and we are not liable for any damage, loss, or harm resulting from their use, including but not limited to account bans, terminations, or any other consequences. If you get banned from Roblox or any game due to using the script, you cannot hold us responsible or take any action against us.</p>
-        </div>
+<div class="tos-section">
+<h2><img src="https://unpkg.com/lucide-static@latest/icons/alert-triangle.svg"> Disclaimers & Liability</h2>
+<p>The Service is provided "as is" without warranties of any kind. We are not liable for any damage, bans, terminations, or consequences from using the scripts — you use them entirely at your own risk.</p>
+</div>
 
-        <div class="tos-section">
-            <h2><i data-lucide="gavel"></i>Termination</h2>
-            <p>We may suspend or terminate your access to the Service at any time for violations of these Terms. Upon termination, your right to use the Service ends immediately.</p>
-        </div>
+<div class="tos-section">
+<h2><img src="https://unpkg.com/lucide-static@latest/icons/gavel.svg"> Termination</h2>
+<p>We may suspend or terminate your access to the Service at any time for violations of these Terms.</p>
+</div>
+</div>
 
-        <div class="last-updated">
-            Last Updated: October 25, 2025
-        </div>
-    </div>
+<div class="last-updated">
+Last Updated: November 20, 2025
+</div>
 
-    <script>
-        const canvas = document.getElementById('backgroundCanvas');
-        const ctx = canvas.getContext('2d');
+<div class="back-home">
+<a href="https://getunx.qzz.io/" class="back-home-btn">
+<img src="https://unpkg.com/lucide-static@latest/icons/arrow-left.svg" width="20" style="margin-right:8px;vertical-align:middle;filter:invert(1)"> Go Back Home
+</a>
+</div>
+</main>
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        class Ball {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.radius = 150 + Math.random() * 100;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 2;
-                this.color = `rgba(59, 130, 246, ${0.15 + Math.random() * 0.1})`;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
-                    this.vx = -this.vx;
-                }
-                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
-                    this.vy = -this.vy;
-                }
-            }
-
-            draw() {
-                ctx.filter = 'blur(80px)';
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.filter = 'none';
-            }
-        }
-
-        const balls = [new Ball(), new Ball()];
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            balls.forEach(ball => {
-                ball.update();
-                ball.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // Menu toggle functionality
-        const menuToggle = document.getElementById('menuToggle');
-        const menuDropdown = document.getElementById('menuDropdown');
-
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuDropdown.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
-                menuDropdown.classList.remove('active');
-            }
-        });
-
-        lucide.createIcons();
-    </script>
+<script>
+document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
+</script>
 </body>
 </html>
