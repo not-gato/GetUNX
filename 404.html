@@ -1,169 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - UNXHub</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - UNXHub</title>
+<style>
+:root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
+@keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+/* Navigation (Identical to Main Page) */
+.topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:320px;transition:all .3s}
+.topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
+.topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
+.topbar-logo img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 16px rgba(146,3,255,.4)}
+.hamburger{width:28px;height:28px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;transition:.3s}
+.hamburger span{width:100%;height:2px;background:#fff;border-radius:1px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+.menu-items{display:none;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
+.topbar.open .menu-items{display:flex}
+.menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
+.menu-item:hover{opacity:.7}
+.menu-item img{width:20px;height:20px;filter:invert(1)}
 
-        .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
-        }
+/* 404 Specific Styles */
+.error-container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+}
 
-        .error-code {
-            font-size: 10rem;
-            font-weight: 100;
-            line-height: 1;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            animation: fadeIn 0.8s ease-out;
-        }
+.glitch-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
 
-        .error-code.blink .four {
-            opacity: 0;
-        }
+.error-code {
+    font-size: 10rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff, #9203ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    text-shadow: 0 0 30px rgba(146,3,255,0.5);
+    animation: pulse 3s infinite;
+}
 
-        .four {
-            transition: opacity 0.1s ease;
-        }
+/* Tech decoration behind 404 */
+.error-code::before {
+    content: '404';
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #9203ff, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.3;
+    transform: translate(4px, 4px);
+    z-index: -1;
+    filter: blur(4px);
+}
 
-        .error-message {
-            font-size: 1.125rem;
-            font-weight: 400;
-            color: #a0a0a0;
-            line-height: 1.6;
-            animation: fadeIn 1s ease-out 0.2s backwards;
-        }
+.error-msg {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
 
-        .error-message a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
+.lua-error {
+    font-family: 'Consolas', 'Monaco', monospace;
+    background: rgba(20, 10, 25, 0.6);
+    border: 1px solid rgba(255, 95, 86, 0.3);
+    color: #ff5f56;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+    backdrop-filter: blur(10px);
+    display: inline-block;
+}
 
-        .error-message a:hover {
-            color: #60a5fa;
-            text-decoration: underline;
-        }
+.home-btn {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #9203ff, #4a007a);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(146,3,255,.3);
+    transition: all .3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+.home-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(146,3,255,.5);
+}
+.home-btn img { width: 20px; height: 20px; filter: invert(1); }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(0.98); }
+}
 
-        @keyframes blink {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        /* Animated background particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(59, 130, 246, 0.3);
-            border-radius: 50%;
-            animation: float 20s infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
-        }
-    </style>
+@media(max-width: 768px) {
+    .error-code { font-size: 6rem; }
+    .error-msg { font-size: 1.5rem; }
+    .lua-error { font-size: 0.9rem; padding: 0.8rem; }
+}
+</style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
+
+<nav class="topbar" id="topbar">
+<div class="topbar-logo">
+<img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="UNXHub">
+<span>UNXHub</span>
+</div>
+<div class="hamburger" onclick="document.getElementById('topbar').classList.toggle('open')">
+<span></span><span></span><span></span>
+</div>
+<div class="menu-items">
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
+<img src="https://unpkg.com/lucide-static@latest/icons/home.svg"> Home
+</div>
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
+<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Terms Of Service
+</div>
+</div>
+</nav>
+
+<main class="error-container">
+    <div class="glitch-wrapper">
+        <div class="error-code">404</div>
+    </div>
+    <h2 class="error-msg">Execution Failed</h2>
     
-    <div class="container">
-        <div class="error-code" id="errorCode">
-            <span class="four">4</span><span>0</span><span class="four">4</span>
-        </div>
-        <p class="error-message">
-            Looks like this page doesn't exist or has been moved, but you can always go back <a href="https://getunx.vercel.app/">home</a>!
-        </p>
+    <div class="lua-error">
+        error: workspace.Pages["Requested_URL"] is nil
     </div>
 
-    <script>
-        // Create floating particles
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            particlesContainer.appendChild(particle);
-        }
+    <a href="https://getunx.qzz.io/" class="home-btn">
+        <img src="https://unpkg.com/lucide-static@latest/icons/arrow-left.svg" alt="Back">
+        Return Home
+    </a>
+</main>
 
-        const errorCode = document.getElementById('errorCode');
-        
-        function blinkAnimation() {
-            errorCode.classList.add('blink');
-            setTimeout(() => {
-                errorCode.classList.remove('blink');
-                const nextBlink = Math.random() * 8000 + 7000; // 7000-15000ms
-                setTimeout(blinkAnimation, nextBlink);
-            }, 100);
-        }
-      
-        const initialDelay = Math.random() * 8000 + 7000;
-        setTimeout(blinkAnimation, initialDelay);
-    </script>
+<script>
+
+document.addEventListener('click',e=>{
+    if(!e.target.closest('.topbar')) document.getElementById('topbar').classList.remove('open')
+});
+</script>
 </body>
 </html>
-
