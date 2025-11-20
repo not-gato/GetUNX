@@ -10,6 +10,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
 @keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
+
+/* Topbar & Navigation */
 .topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:320px;transition:all .3s}
 .topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
 .topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
@@ -24,6 +26,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
 .menu-item:hover{opacity:.7}
 .menu-item img{width:20px;height:20px;filter:invert(1)}
+
+/* Content & Hero */
 .content{padding-top:140px;max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
 .hero{text-align:center;margin-bottom:6rem}
 .hero h1{font-size:5rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 8s ease infinite;filter:drop-shadow(0 0 20px rgba(146,3,255,.4))}
@@ -34,6 +38,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 @keyframes b{0%,100%{opacity:1}50%{opacity:0}}
 .get-script-btn{padding:1.2rem 3.5rem;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#9203ff,#4a007a);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px;cursor:pointer;box-shadow:0 10px 30px rgba(146,3,255,.3);transition:all .3s}
 .get-script-btn:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(146,3,255,.5)}
+
+/* Games Grid */
 .section-title{font-size:2.5rem;font-weight:700;margin:3rem 0 2.5rem;display:flex;align-items:center;gap:1rem}
 .section-title::before{content:'';width:6px;height:40px;background:var(--primary);border-radius:3px}
 .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-bottom:5rem}
@@ -47,6 +53,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .action-btn{border:none;border-radius:8px;font-weight:600;padding:.7rem;display:flex;align-items:center;justify-content:center;gap:.5rem;color:#fff;font-size:.9rem;cursor:pointer}
 .action-btn img{filter:invert(1);width:16px;height:16px}
 .play-btn{background:var(--primary);width:100%}
+
+/* Features */
 .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
 .feature-card{background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:transform .3s}
 .feature-card:hover{transform:translateY(-5px)}
@@ -55,24 +63,140 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .feature-desc{color:#aaa;line-height:1.6;font-size:.95rem}
 .feature-desc a{color:#fff;background:linear-gradient(135deg,#9203ff,#4a00e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:.3s}
 .feature-desc a:hover{opacity:.8}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;z-index:10000;padding:1rem}
-.modal-overlay.open{display:flex}
-.popup-card{max-width:860px;width:100%;background:rgba(25,25,35,.98);border:1px solid rgba(146,3,255,.4);border-radius:24px;overflow:hidden;box-shadow:0 30px 100px rgba(146,3,255,.25);animation:pop .5s cubic-bezier(0.16,1,0.3,1)}
-@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-.popup-header{background:linear-gradient(135deg,#9203ff,rgba(146,3,255,.6));padding:1.4rem 2rem;text-align:center;position:relative}
-.popup-header h2{font-size:1.8rem;font-weight:800;background:linear-gradient(to right,#fff,#e0aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.close-popup{position:absolute;top:16px;right:16px;width:40px;height:40px;background:rgba(0,0,0,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:1.4rem;font-weight:bold}
-.close-popup:hover{background:#ff5f56}
-.popup-body{padding:2rem;background:#1e1e2e}
-.code-block{background:#121212;border-radius:16px;padding:1.8rem;position:relative;overflow:hidden;border:1px solid rgba(146,3,255,.3)}
-.code-block pre{margin:0}
-.code-block code{font-size:15.5px;line-height:1.7}
-.copy-btn{position:absolute;top:18px;right:18px;width:56px;height:56px;background:var(--primary);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 8px 25px rgba(146,3,255,.5)}
-.copy-btn:hover{transform:scale(1.15)}
-.copy-btn img{width:28px;height:28px;filter:invert(1)}
-.tos-footer{background:rgba(146,3,255,.1);border-top:1px solid rgba(146,3,255,.3);padding:1.4rem 2rem;text-align:center;font-size:1rem;color:#ccc;border-radius:0 0 24px 24px}
-.tos-footer a{color:#9203ff;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tos-footer a:hover{opacity:.8}
+
+/* MODAL / POPUP (RE-DESIGNED) */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:10000;padding:1rem;opacity:0;transition:opacity .3s ease}
+.modal-overlay.open{display:flex;opacity:1}
+
+.popup-card{
+    max-width:800px;
+    width:100%;
+    /* Glass Style matching website */
+    background: rgba(15, 15, 20, 0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(146, 3, 255, 0.2);
+    border-radius: 28px;
+    overflow:hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 0 30px rgba(146,3,255,0.15);
+    transform: scale(0.95);
+    transition: transform .3s cubic-bezier(0.16,1,0.3,1);
+    display: flex;
+    flex-direction: column;
+}
+.modal-overlay.open .popup-card { transform: scale(1); }
+
+.popup-header{
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.popup-header h2{
+    font-size: 1.8rem;
+    font-weight: 800;
+    /* Gradient Text instead of Background Header */
+    background: linear-gradient(135deg, #e0aaff, #9203ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.close-popup{
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .3s;
+    font-size: 1.5rem;
+    color: #aaa;
+    border: 1px solid transparent;
+}
+.close-popup:hover{
+    background: rgba(255,95,86,0.15);
+    color: #ff5f56;
+    border-color: rgba(255,95,86,0.3);
+}
+
+.popup-body{
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.code-wrapper {
+    position: relative;
+    border-radius: 16px;
+    /* Darker than popup to pop out */
+    background: #08080a;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.code-block {
+    margin: 0;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+.code-block code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Floating Copy Button inside Code Block */
+.copy-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ccc;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.copy-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(146,3,255,0.3);
+}
+.copy-btn img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1);
+}
+
+.tos-footer{
+    text-align: center;
+    font-size: 0.9rem;
+    color: #888;
+    padding-top: 0.5rem;
+}
+.tos-footer a{
+    color: #e0aaff;
+    text-decoration: none;
+    transition: .3s;
+}
+.tos-footer a:hover{
+    color: #fff;
+    text-shadow: 0 0 10px rgba(146,3,255,0.6);
+}
+
 @media(max-width:768px){.hero h1{font-size:3.2rem}.typewriter{font-size:1.4rem}.content{padding-top:160px}.popup-header h2{font-size:1.6rem}.popup-body{padding:1.5rem}.code-block{padding:1.5rem}}
 </style>
 </head>
@@ -155,24 +279,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </main>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
-<div class="popup-card" onclick="event.stopPropagation()">
-<div class="popup-header">
-<h2>UNXHub</h2>
-<div class="close-popup" onclick="closeModal()">×</div>
-</div>
-<div class="popup-body">
-<div class="code-block">
-<pre><code class="language-lua">getgenv().unxns = { loadfrom = "Website" }
+    <div class="popup-card" onclick="event.stopPropagation()">
+        <div class="popup-header">
+            <h2>UNXHub</h2>
+            <div class="close-popup" onclick="closeModal()">×</div>
+        </div>
+        
+        <div class="popup-body">
+            <div class="code-wrapper">
+                <pre class="code-block"><code class="language-lua">getgenv().unxns = { loadfrom = "Website" }
 loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()</code></pre>
-<button class="copy-btn" onclick="copyScriptCode(this)">
-<img src="https://unpkg.com/lucide-static@latest/icons/copy.svg" alt="Copy">
-</button>
-</div>
-<div class="tos-footer">
-By pasting and executing this script you fully accept our <a href="https://getunx.qzz.io/tos.html" target="_blank">Terms of Service</a>.
-</div>
-</div>
-</div>
+                <button class="copy-btn" onclick="copyScriptCode(this)">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/copy.svg" alt="Copy">
+                    Copy
+                </button>
+            </div>
+            
+            <div class="tos-footer">
+                By executing this script you accept our <a href="https://getunx.qzz.io/tos.html" target="_blank">Terms of Service</a>.
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -202,9 +329,17 @@ function copyScriptCode(btn){
 const code=`getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()`;
 navigator.clipboard.writeText(code).then(()=>{
 const img=btn.querySelector('img');
+const txt=btn.childNodes[2]; // Get text node
 img.src="https://unpkg.com/lucide-static@latest/icons/check.svg";
 btn.style.background='#27c93f';
-setTimeout(()=>{img.src="https://unpkg.com/lucide-static@latest/icons/copy.svg";btn.style.background=''},2000);
+btn.style.color='#fff';
+if(txt) txt.textContent = " Copied";
+setTimeout(()=>{
+    img.src="https://unpkg.com/lucide-static@latest/icons/copy.svg";
+    btn.style.background='';
+    btn.style.color='';
+    if(txt) txt.textContent = " Copy";
+},2000);
 });
 }
 document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
