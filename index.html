@@ -1,749 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNXHub - Fast & Open Source Script Hub</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #000000;
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            line-height: 1.6;
-            /* Removed overflow: hidden to allow scrolling */
-            position: relative;
-        }
-
-        /* Added canvas for bouncing balls background */
-        #backgroundCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        /* Floating topbar */
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .topbar-title {
-            font-size: 1.5rem;
-            font-weight: 100;
-            color: #ffffff;
-        }
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: #ffffff;
-            cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        .menu-toggle:hover {
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        .menu-toggle svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Menu dropdown */
-        .menu-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 2rem;
-            background: rgba(30, 30, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0 0 12px 12px;
-            display: none;
-            flex-direction: column;
-            min-width: 200px;
-            margin-top: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .menu-dropdown.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .menu-item {
-            padding: 1rem 1.5rem;
-            color: #ffffff;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s;
-            font-size: 1rem;
-            font-weight: 400;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .menu-item:hover {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-        }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-item svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            /* Added padding top for topbar and bottom for scroll space */
-            padding-top: 6rem;
-            padding-bottom: 4rem;
-        }
-
-        h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .tagline {
-            font-size: 1.25rem;
-            font-weight: 200;
-            color: #a0a0a0;
-            margin-bottom: 2rem;
-        }
-
-        .get-script-btn {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: #ffffff;
-            border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 4rem;
-        }
-
-        .get-script-btn:hover {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-        }
-
-        /* Redesigned modal overlay with more blur */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        /* Redesigned window with blur background */
-        .macos-window {
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-
-        .modal-overlay.active .macos-window {
-            animation: modalOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes modalOpen {
-            from {
-                transform: scale(0.8) translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .macos-window.minimizing {
-            transform: scale(0.1);
-            opacity: 0;
-        }
-
-        .window-header {
-            background: rgba(45, 45, 45, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .window-btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .window-btn.close {
-            background: #ff5f57;
-        }
-
-        .window-btn.close:hover {
-            background: #ff3b30;
-        }
-
-        .window-btn.minimize {
-            background: #ffbd2e;
-        }
-
-        .window-btn.minimize:hover {
-            background: #ff9500;
-        }
-
-        .window-title {
-            flex: 1;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #a0a0a0;
-            font-weight: 500;
-        }
-
-        /* Added copy button to window header */
-        .window-header-copy {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 6px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .window-header-copy:hover {
-            background: rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-
-        .window-header-copy.copied {
-            background: rgba(0, 255, 136, 0.2);
-            border-color: rgba(0, 255, 136, 0.5);
-        }
-
-        .window-header-copy svg {
-            width: 16px;
-            height: 16px;
-            color: #3b82f6;
-        }
-
-        .window-header-copy.copied svg {
-            color: #00ff88;
-        }
-
-        .window-content {
-            padding: 2rem;
-        }
-
-        /* Added container for textbox with copy button in top right corner */
-        .script-container {
-            position: relative;
-        }
-
-        .script-box-copy {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 6px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .script-box-copy:hover {
-            background: rgba(59, 130, 246, 0.3);
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-
-        .script-box-copy.copied {
-            background: rgba(0, 255, 136, 0.2);
-            border-color: rgba(0, 255, 136, 0.5);
-        }
-
-        .script-box-copy svg {
-            width: 16px;
-            height: 16px;
-            color: #3b82f6;
-        }
-
-        .script-box-copy.copied svg {
-            color: #00ff88;
-        }
-
-        /* Updated script box styling */
-        .script-box {
-            background: rgba(13, 13, 13, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            padding-top: 3rem;
-            transition: all 0.2s;
-        }
-
-        /* TOS notice */
-        .tos-notice {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.875rem;
-            color: #a0a0a0;
-        }
-
-        .tos-notice a {
-            color: #3b82f6;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
-            transition: all 0.2s;
-        }
-
-        .tos-notice a:hover {
-            border-bottom-color: #3b82f6;
-        }
-
-        .features {
-            margin-top: 4rem;
-        }
-
-        .features-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            text-align: left;
-        }
-
-        .feature-item {
-            padding: 1.5rem;
-            background: rgba(13, 13, 13, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-
-        .feature-item:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 1rem;
-            color: #3b82f6;
-        }
-
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-desc {
-            color: #a0a0a0;
-            line-height: 1.6;
-        }
-
-        .feature-desc a {
-            color: #ffffff;
-            text-decoration: none;
-            border-bottom: 1px solid #3d3d3d;
-            transition: border-color 0.2s;
-        }
-
-        .feature-desc a:hover {
-            border-color: #ffffff;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .features-title {
-                font-size: 1.5rem;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .script-box {
-                flex-direction: column;
-            }
-
-            .topbar {
-                padding: 1rem;
-            }
-
-            .topbar-title {
-                font-size: 1.25rem;
-            }
-
-            .menu-dropdown {
-                right: 1rem;
-            }
-        }
-
-        /* Added Lua syntax highlighting styles */
-        .script-text {
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.875rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        .lua-keyword {
-            color: #ff5f57;
-        }
-
-        .lua-string {
-            color: #00ff88;
-        }
-
-        .lua-function {
-            color: #3b82f6;
-        }
-
-        .lua-default {
-            color: #ffffff;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">UNXHub - A Script for Flick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
+@keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
+.topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:320px;transition:all .3s}
+.topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
+.topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
+.topbar-logo img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 16px rgba(146,3,255,.4)}
+.hamburger{width:28px;height:28px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;transition:.3s}
+.hamburger span{width:100%;height:2px;background:#fff;border-radius:1px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+.menu-items{display:none;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
+.topbar.open .menu-items{display:flex}
+.menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
+.menu-item:hover{opacity:.7}
+.menu-item img{width:20px;height:20px;filter:invert(1)}
+.content{padding-top:140px;max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
+.hero{text-align:center;margin-bottom:6rem}
+.hero h1{font-size:5rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 8s ease infinite;filter:drop-shadow(0 0 20px rgba(146,3,255,.4))}
+@keyframes gs{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.typewriter{font-size:1.8rem;color:#ccc;min-height:50px;margin-bottom:2rem}
+.typewriter span{color:var(--primary);font-weight:600}
+.cursor{display:inline-block;width:3px;height:1.4em;background:var(--primary);animation:b .8s infinite;margin-left:2px}
+@keyframes b{0%,100%{opacity:1}50%{opacity:0}}
+.get-script-btn{padding:1.2rem 3.5rem;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#9203ff,#4a007a);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px;cursor:pointer;box-shadow:0 10px 30px rgba(146,3,255,.3);transition:all .3s}
+.get-script-btn:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(146,3,255,.5)}
+.section-title{font-size:2.5rem;font-weight:700;margin:3rem 0 2.5rem;display:flex;align-items:center;gap:1rem}
+.section-title::before{content:'';width:6px;height:40px;background:var(--primary);border-radius:3px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-bottom:5rem}
+.game-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:1.5rem;cursor:pointer;transition:all .3s;overflow:hidden}
+.game-card:hover{transform:translateY(-6px);border-color:var(--primary)}
+.game-thumbnail-container{height:180px;border-radius:12px;overflow:hidden;margin-bottom:1rem;background:#111}
+.game-thumbnail{width:100%;height:100%;object-fit:cover}
+.game-info h3{font-size:1.5rem;font-weight:600;margin-bottom:1rem}
+.game-actions{height:0;opacity:0;overflow:hidden;transition:all .3s}
+.game-card.active .game-actions{height:auto;opacity:1;margin-top:1rem;padding-top:.5rem}
+.action-btn{border:none;border-radius:8px;font-weight:600;padding:.7rem;display:flex;align-items:center;justify-content:center;gap:.5rem;color:#fff;font-size:.9rem;cursor:pointer}
+.action-btn img{filter:invert(1);width:16px;height:16px}
+.play-btn{background:var(--primary);width:100%}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+.feature-card{background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:transform .3s}
+.feature-card:hover{transform:translateY(-5px)}
+.feature-icon{width:40px;height:40px;filter:invert(1);margin-bottom:1rem}
+.feature-title{font-size:1.3rem;font-weight:700;margin-bottom:.5rem}
+.feature-desc{color:#aaa;line-height:1.6;font-size:.95rem}
+.feature-desc a{color:#fff;background:linear-gradient(135deg,#9203ff,#4a00e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:.3s}
+.feature-desc a:hover{opacity:.8}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;z-index:10000;padding:1rem}
+.modal-overlay.open{display:flex}
+.popup-card{max-width:860px;width:100%;background:rgba(25,25,35,.98);border:1px solid rgba(146,3,255,.4);border-radius:24px;overflow:hidden;box-shadow:0 30px 100px rgba(146,3,255,.25);animation:pop .5s cubic-bezier(0.16,1,0.3,1)}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.popup-header{background:linear-gradient(135deg,#9203ff,rgba(146,3,255,.6));padding:1.4rem 2rem;text-align:center;position:relative}
+.popup-header h2{font-size:1.8rem;font-weight:800;background:linear-gradient(to right,#fff,#e0aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.close-popup{position:absolute;top:16px;right:16px;width:40px;height:40px;background:rgba(0,0,0,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:1.4rem;font-weight:bold}
+.close-popup:hover{background:#ff5f56}
+.popup-body{padding:2rem;background:#1e1e2e}
+.code-block{background:#121212;border-radius:16px;padding:1.8rem;position:relative;overflow:hidden;border:1px solid rgba(146,3,255,.3)}
+.code-block pre{margin:0}
+.code-block code{font-size:15.5px;line-height:1.7}
+.copy-btn{position:absolute;top:18px;right:18px;width:56px;height:56px;background:var(--primary);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 8px 25px rgba(146,3,255,.5)}
+.copy-btn:hover{transform:scale(1.15)}
+.copy-btn img{width:28px;height:28px;filter:invert(1)}
+.tos-footer{background:rgba(146,3,255,.1);border-top:1px solid rgba(146,3,255,.3);padding:1.4rem 2rem;text-align:center;font-size:1rem;color:#ccc;border-radius:0 0 24px 24px}
+.tos-footer a{color:#9203ff;font-weight:700;text-decoration:none;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tos-footer a:hover{opacity:.8}
+@media(max-width:768px){.hero h1{font-size:3.2rem}.typewriter{font-size:1.4rem}.content{padding-top:160px}.popup-header h2{font-size:1.6rem}.popup-body{padding:1.5rem}.code-block{padding:1.5rem}}
+</style>
 </head>
 <body>
-    <!-- Floating topbar -->
-    <nav class="topbar">
-        <div class="topbar-title">UNXHub</div>
-        <button class="menu-toggle" id="menuToggle">
-            <i data-lucide="menu"></i>
-        </button>
-        <div class="menu-dropdown" id="menuDropdown">
-            <a href="#" class="menu-item">
-                <i data-lucide="home"></i>
-                <span>Home</span>
-            </a>
-            <a href="tos.html" class="menu-item">Terms Of Service</a>
-        </div>
-    </nav>
 
-    <!-- Added canvas for animated background -->
-    <canvas id="backgroundCanvas"></canvas>
+<nav class="topbar" id="topbar">
+<div class="topbar-logo">
+<img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="UNXHub">
+<span>UNXHub</span>
+</div>
+<div class="hamburger" onclick="document.getElementById('topbar').classList.toggle('open')">
+<span></span><span></span><span></span>
+</div>
+<div class="menu-items">
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
+<img src="https://unpkg.com/lucide-static@latest/icons/home.svg"> Home
+</div>
+<div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
+<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Terms Of Service
+</div>
+</div>
+</nav>
 
-    <div class="container">
-        <h1>UNXHub</h1>
-        <p class="tagline">Not The Best, Not The Worst.</p>
-        
-        <button class="get-script-btn" onclick="openModal(event)">Get Script</button>
+<main class="content">
+<section class="hero">
+<h1>UNXHub</h1>
+<div class="typewriter">A Script for <span id="game-name">Flick</span><span class="cursor"></span></div>
+<button class="get-script-btn" onclick="openModal()">Get Script</button>
+</section>
 
-        <!-- Fixed modal overlay click propagation -->
-        <div class="modal-overlay" id="modalOverlay">
-            <div class="macos-window" id="macosWindow" onclick="event.stopPropagation()">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <button class="window-btn close" onclick="closeModal(event)"></button>
-                        <button class="window-btn minimize" onclick="minimizeModal(event)"></button>
-                    </div>
-                    <div class="window-title">UNXHub Script</div>
-                </div>
-                <div class="window-content">
-                    <!-- Added script container with copy button in top right of textbox -->
-                    <div class="script-container">
-                        <button class="script-box-copy" id="copyBtn" onclick="copyScript(event)">
-                            <i data-lucide="copy" id="copyIcon"></i>
-                        </button>
-                        <div class="script-box">
-                            <div class="script-text" id="scriptText"></div>
-                        </div>
-                    </div>
-                    <div class="tos-notice">
-                        <p>By executing UNXHub you accept our <a href="tos.html">Terms Of Services</a>.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<section>
+<h2 class="section-title">Supported Games</h2>
+<div class="games-grid">
+<div class="game-card" onclick="toggleCard(this)">
+<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flick.webp" class="game-thumbnail" alt="Flick"></div>
+<div class="game-info"><h3>Flick</h3></div>
+<div class="game-actions">
+<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/136801880565837/Flick','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+</div>
+</div>
 
-        <div class="features">
-            <h2 class="features-title">Why Use UNXHub?</h2>
-            <div class="feature-grid">
-                <div class="feature-item">
-                    <i data-lucide="zap" class="feature-icon"></i>
-                    <div class="feature-title">Fast</div>
-                    <div class="feature-desc">UNXHub Is Fast And Optimized</div>
-                </div>
-                <div class="feature-item">
-                    <i data-lucide="github" class="feature-icon"></i>
-                    <div class="feature-title">Open Source</div>
-                    <div class="feature-desc">UNXHub Is Open Source And Safe!</div>
-                </div>
-                <div class="feature-item">
-                    <i data-lucide="smartphone" class="feature-icon"></i>
-                    <div class="feature-title">Great Compatibility</div>
-                    <div class="feature-desc"><a href="https://github.com/deividcomsono/Obsidian/" target="_blank">Obsidian UI</a> Offers Great Mobile Compatibility</div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="game-card" onclick="toggleCard(this)">
+<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flee.webp" class="game-thumbnail" alt="Flee the Facility"></div>
+<div class="game-info"><h3>Flee the Facility</h3></div>
+<div class="game-actions">
+<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/893973440/Flee-the-Facility','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+</div>
+</div>
 
-    <script>
-        const canvas = document.getElementById('backgroundCanvas');
-        const ctx = canvas.getContext('2d');
+<div class="game-card" onclick="toggleCard(this)">
+<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Figure.webp" class="game-thumbnail" alt="Figure's Library"></div>
+<div class="game-info"><h3>Figure's Library</h3></div>
+<div class="game-actions">
+<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/12240122896/Figures-Library','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+</div>
+</div>
+</div>
+</section>
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+<section>
+<h2 class="section-title">Why Use UNXHub?</h2>
+<div class="features-grid">
+<div class="feature-card">
+<img src="https://unpkg.com/lucide-static@latest/icons/github.svg" class="feature-icon">
+<h3 class="feature-title">Open Source</h3>
+<p class="feature-desc">Fully transparent code. <a href="https://github.com/not-gato/UNX" target="_blank">View on GitHub</a></p>
+</div>
+<div class="feature-card">
+<img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" class="feature-icon">
+<h3 class="feature-title">Lightning Fast</h3>
+<p class="feature-desc">Optimized for instant execution on PC & mobile.</p>
+</div>
+<div class="feature-card">
+<img src="https://unpkg.com/lucide-static@latest/icons/smartphone.svg" class="feature-icon">
+<h3 class="feature-title">Mobile Ready</h3>
+<p class="feature-desc">Perfect touch controls with Obsidian UI Library.</p>
+</div>
+</div>
+</section>
+</main>
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+<div class="popup-card" onclick="event.stopPropagation()">
+<div class="popup-header">
+<h2>UNXHub</h2>
+<div class="close-popup" onclick="closeModal()">×</div>
+</div>
+<div class="popup-body">
+<div class="code-block">
+<pre><code class="language-lua">getgenv().unxns = { loadfrom = "Website" }
+loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()</code></pre>
+<button class="copy-btn" onclick="copyScriptCode(this)">
+<img src="https://unpkg.com/lucide-static@latest/icons/copy.svg" alt="Copy">
+</button>
+</div>
+<div class="tos-footer">
+By pasting and executing this script you fully accept our <a href="https://getunx.qzz.io/tos.html" target="_blank">Terms of Service</a>.
+</div>
+</div>
+</div>
+</div>
 
-        class Ball {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.radius = 150 + Math.random() * 100;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 2;
-                this.color = `rgba(59, 130, 246, ${0.15 + Math.random() * 0.1})`;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
-                    this.vx = -this.vx;
-                }
-                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
-                    this.vy = -this.vy;
-                }
-            }
-
-            draw() {
-                ctx.filter = 'blur(80px)';
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.filter = 'none';
-            }
-        }
-
-        const balls = [new Ball(), new Ball()];
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            balls.forEach(ball => {
-                ball.update();
-                ball.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        function highlightLua(code) {
-            // Lua keywords to highlight in red
-            const keywords = ['loadstring', 'game', 'true', 'false', 'nil', 'and', 'or', 'not', 'if', 'then', 'else', 'elseif', 'end', 'for', 'while', 'do', 'repeat', 'until', 'function', 'local', 'return'];
-            
-            // Escape HTML first
-            code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            
-            // Replace strings with green color
-            code = code.replace(/"([^"]*)"/g, '<span class="lua-string">"$1"</span>');
-            
-            // Replace keywords with red color
-            keywords.forEach(keyword => {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-                code = code.replace(regex, `<span class="lua-keyword">${keyword}</span>`);
-            });
-            
-            // Replace method calls (like :HttpGet) with blue
-            code = code.replace(/:(\w+)/g, ':<span class="lua-function">$1</span>');
-            
-            return code;
-        }
-
-        const scriptCode = 'loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua",true))()';
-        document.getElementById('scriptText').innerHTML = highlightLua(scriptCode);
-
-        function openModal(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.add('active');
-            lucide.createIcons();
-        }
-
-        function closeModal(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            const overlay = document.getElementById('modalOverlay');
-            const window = document.getElementById('macosWindow');
-            
-            window.style.transform = 'scale(0.9)';
-            window.style.opacity = '0';
-            
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                window.style.transform = '';
-                window.style.opacity = '';
-            }, 200);
-        }
-
-        function minimizeModal(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            const overlay = document.getElementById('modalOverlay');
-            const window = document.getElementById('macosWindow');
-            
-            window.classList.add('minimizing');
-            
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                window.classList.remove('minimizing');
-            }, 300);
-        }
-
-        document.getElementById('modalOverlay').addEventListener('click', function(event) {
-            if (event.target.id === 'modalOverlay') {
-                closeModal();
-            }
-        });
-
-        function copyScript(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            const scriptText = scriptCode;
-            const copyBtn = document.getElementById('copyBtn');
-            const copyIcon = document.getElementById('copyIcon');
-            
-            navigator.clipboard.writeText(scriptText).then(() => {
-                copyBtn.classList.add('copied');
-                copyIcon.setAttribute('data-lucide', 'check');
-                lucide.createIcons();
-                
-                setTimeout(() => {
-                    copyBtn.classList.remove('copied');
-                    copyIcon.setAttribute('data-lucide', 'copy');
-                    lucide.createIcons();
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
-        }
-
-        // Menu toggle functionality
-        const menuToggle = document.getElementById('menuToggle');
-        const menuDropdown = document.getElementById('menuDropdown');
-
-        menuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuDropdown.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!menuToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
-                menuDropdown.classList.remove('active');
-            }
-        });
-
-        lucide.createIcons();
-    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+const games=["Flick","Flee the Facility","Figure's Library"];
+let currentGame="Flick";
+const gameElement=document.getElementById("game-name");
+const pageTitle=document.getElementById("page-title");
+function updateTitle(){pageTitle.textContent=`UNXHub - A Script for ${currentGame}`}
+function typeWriter(t,cb){let i=0;gameElement.textContent="";const int=setInterval(()=>{if(i<t.length){gameElement.textContent+=t.charAt(i);i++}else{clearInterval(int);if(cb)cb()}},60)}
+function deleteWriter(cb){const int=setInterval(()=>{if(gameElement.textContent.length>0)gameElement.textContent=gameElement.textContent.slice(0,-1);else{clearInterval(int);if(cb)cb()}},40)}
+function getRandomGame(ex){const a=games.filter(g=>g!==ex);return a[Math.floor(Math.random()*a.length)]}
+function cycleGame(){
+deleteWriter(()=>{setTimeout(()=>{currentGame=getRandomGame(currentGame);typeWriter(currentGame,updateTitle);updateTitle();},200)})
+}
+setTimeout(()=>{setInterval(cycleGame,4500);cycleGame()},2000);
+updateTitle();
+function toggleCard(c){
+c.classList.toggle('active');
+document.querySelectorAll('.game-card').forEach(card=>{if(card!==c)card.classList.remove('active')});
+}
+const modal=document.getElementById('modal');
+function openModal(){modal.classList.add('open')}
+function closeModal(){modal.classList.remove('open')}
+function copyScriptCode(btn){
+const code=`getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()`;
+navigator.clipboard.writeText(code).then(()=>{
+const img=btn.querySelector('img');
+img.src="https://unpkg.com/lucide-static@latest/icons/check.svg";
+btn.style.background='#27c93f';
+setTimeout(()=>{img.src="https://unpkg.com/lucide-static@latest/icons/copy.svg";btn.style.background=''},2000);
+});
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
+</script>
 </body>
 </html>
