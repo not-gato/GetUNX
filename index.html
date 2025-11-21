@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title id="page-title">UNXHub - A Script for Flick</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<!-- Added Lucide Script for dynamic status icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -39,20 +41,57 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .get-script-btn{padding:1.2rem 3.5rem;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#9203ff,#4a007a);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px;cursor:pointer;box-shadow:0 10px 30px rgba(146,3,255,.3);transition:all .3s}
 .get-script-btn:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(146,3,255,.5)}
 
+/* Status Legend - New Addition */
+.status-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    background: rgba(255,255,255,0.03);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.status-item svg { width: 16px; height: 16px; }
+.status-working { color: #4ade80; }
+.status-degraded { color: #fb923c; }
+.status-patched { color: #f87171; }
+
 /* Games Grid */
-.section-title{font-size:2.5rem;font-weight:700;margin:3rem 0 2.5rem;display:flex;align-items:center;gap:1rem}
+.section-title{font-size:2.5rem;font-weight:700;margin:3rem 0 1.5rem;display:flex;align-items:center;gap:1rem}
 .section-title::before{content:'';width:6px;height:40px;background:var(--primary);border-radius:3px}
 .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-bottom:5rem}
 .game-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:1.5rem;cursor:pointer;transition:all .3s;overflow:hidden}
 .game-card:hover{transform:translateY(-6px);border-color:var(--primary)}
-.game-thumbnail-container{height:180px;border-radius:12px;overflow:hidden;margin-bottom:1rem;background:#111}
+.game-thumbnail-container{height:180px;border-radius:12px;overflow:hidden;margin-bottom:1rem;background:#111;position:relative;}
 .game-thumbnail{width:100%;height:100%;object-fit:cover}
-.game-info h3{font-size:1.5rem;font-weight:600;margin-bottom:1rem}
+.game-info h3{font-size:1.5rem;font-weight:600;margin-bottom:1rem; display: flex; align-items: center; justify-content: space-between;}
 .game-actions{height:0;opacity:0;overflow:hidden;transition:all .3s}
 .game-card.active .game-actions{height:auto;opacity:1;margin-top:1rem;padding-top:.5rem}
 .action-btn{border:none;border-radius:8px;font-weight:600;padding:.7rem;display:flex;align-items:center;justify-content:center;gap:.5rem;color:#fff;font-size:.9rem;cursor:pointer}
 .action-btn img{filter:invert(1);width:16px;height:16px}
 .play-btn{background:var(--primary);width:100%}
+
+/* Status Icon in Card */
+.status-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.3);
+}
+.status-icon-wrapper svg {
+    width: 20px;
+    height: 20px;
+}
 
 /* Features */
 .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
@@ -64,14 +103,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .feature-desc a{color:#fff;background:linear-gradient(135deg,#9203ff,#4a00e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:.3s}
 .feature-desc a:hover{opacity:.8}
 
-/* MODAL / POPUP (RE-DESIGNED) */
+/* MODAL / POPUP */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:10000;padding:1rem;opacity:0;transition:opacity .3s ease}
 .modal-overlay.open{display:flex;opacity:1}
 
 .popup-card{
     max-width:800px;
     width:100%;
-    /* Glass Style matching website */
     background: rgba(15, 15, 20, 0.75);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
@@ -97,7 +135,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .popup-header h2{
     font-size: 1.8rem;
     font-weight: 800;
-    /* Gradient Text instead of Background Header */
     background: linear-gradient(135deg, #e0aaff, #9203ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -134,7 +171,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .code-wrapper {
     position: relative;
     border-radius: 16px;
-    /* Darker than popup to pop out */
     background: #08080a;
     border: 1px solid rgba(255,255,255,0.08);
     overflow: hidden;
@@ -151,7 +187,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     line-height: 1.6;
 }
 
-/* Floating Copy Button inside Code Block */
 .copy-btn {
     position: absolute;
     top: 12px;
@@ -212,10 +247,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 <div class="menu-items">
 <div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
-<img src="https://unpkg.com/lucide-static@latest/icons/home.svg"> Home
+<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/home.svg"> Home
 </div>
 <div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
-<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Terms Of Service
+<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/file-text.svg"> Terms Of Service
 </div>
 </div>
 </nav>
@@ -229,30 +264,62 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <section>
 <h2 class="section-title">Supported Games</h2>
-<div class="games-grid">
-<div class="game-card" onclick="toggleCard(this)">
-<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flick.webp" class="game-thumbnail" alt="Flick"></div>
-<div class="game-info"><h3>Flick</h3></div>
-<div class="game-actions">
-<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/136801880565837/Flick','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-</div>
+
+<!-- Status Legend -->
+<div class="status-legend">
+    <div class="status-item">
+        <i data-lucide="circle-check-big" class="status-working"></i> <span>Working</span>
+    </div>
+    <div class="status-item">
+        <i data-lucide="circle-alert" class="status-degraded"></i> <span>Degraded</span>
+    </div>
+    <div class="status-item">
+        <i data-lucide="circle-x" class="status-patched"></i> <span>Patched</span>
+    </div>
 </div>
 
-<div class="game-card" onclick="toggleCard(this)">
-<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flee.webp" class="game-thumbnail" alt="Flee the Facility"></div>
-<div class="game-info"><h3>Flee the Facility</h3></div>
-<div class="game-actions">
-<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/893973440/Flee-the-Facility','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-</div>
-</div>
+<!-- Added data-game-name attributes to identify cards for status updates -->
+<div class="games-grid" id="games-grid">
 
-<div class="game-card" onclick="toggleCard(this)">
-<div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Figure.webp" class="game-thumbnail" alt="Figure's Library"></div>
-<div class="game-info"><h3>Figure's Library</h3></div>
-<div class="game-actions">
-<button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/12240122896/Figures-Library','_blank')"><img src="https://unpkg.com/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-</div>
-</div>
+    <div class="game-card" onclick="toggleCard(this)" data-game-name="Flick">
+        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flick.webp" class="game-thumbnail" alt="Flick"></div>
+        <div class="game-info">
+            <h3>
+                Flick 
+                <span class="status-icon-wrapper" id="status-Flick"></span>
+            </h3>
+        </div>
+        <div class="game-actions">
+            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/136801880565837/Flick','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+        </div>
+    </div>
+
+    <div class="game-card" onclick="toggleCard(this)" data-game-name="Flee the Facility">
+        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flee.webp" class="game-thumbnail" alt="Flee the Facility"></div>
+        <div class="game-info">
+            <h3>
+                Flee the Facility 
+                <span class="status-icon-wrapper" id="status-Flee the Facility"></span>
+            </h3>
+        </div>
+        <div class="game-actions">
+            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/893973440/Flee-the-Facility','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+        </div>
+    </div>
+
+    <div class="game-card" onclick="toggleCard(this)" data-game-name="Figure's Library">
+        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Figure.webp" class="game-thumbnail" alt="Figure's Library"></div>
+        <div class="game-info">
+            <h3>
+                Figure's Library 
+                <span class="status-icon-wrapper" id="status-Figure's Library"></span>
+            </h3>
+        </div>
+        <div class="game-actions">
+            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/12240122896/Figures-Library','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
+        </div>
+    </div>
+    
 </div>
 </section>
 
@@ -260,17 +327,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <h2 class="section-title">Why Use UNXHub?</h2>
 <div class="features-grid">
 <div class="feature-card">
-<img src="https://unpkg.com/lucide-static@latest/icons/github.svg" class="feature-icon">
+<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/github.svg" class="feature-icon">
 <h3 class="feature-title">Open Source</h3>
 <p class="feature-desc">Fully transparent code. <a href="https://github.com/not-gato/UNX" target="_blank">View on GitHub</a></p>
 </div>
 <div class="feature-card">
-<img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" class="feature-icon">
+<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/zap.svg" class="feature-icon">
 <h3 class="feature-title">Lightning Fast</h3>
 <p class="feature-desc">Optimized for instant execution on PC & mobile.</p>
 </div>
 <div class="feature-card">
-<img src="https://unpkg.com/lucide-static@latest/icons/smartphone.svg" class="feature-icon">
+<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/smartphone.svg" class="feature-icon">
 <h3 class="feature-title">Mobile Ready</h3>
 <p class="feature-desc">Perfect touch controls with Obsidian UI Library.</p>
 </div>
@@ -287,10 +354,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         
         <div class="popup-body">
             <div class="code-wrapper">
+                <!-- Example Lua script -->
                 <pre class="code-block"><code class="language-lua">getgenv().unxns = { loadfrom = "Website" }
 loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()</code></pre>
                 <button class="copy-btn" onclick="copyScriptCode(this)">
-                    <img src="https://unpkg.com/lucide-static@latest/icons/copy.svg" alt="Copy">
+                    <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg" alt="Copy">
                     Copy
                 </button>
             </div>
@@ -330,12 +398,12 @@ const code=`getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet(
 navigator.clipboard.writeText(code).then(()=>{
 const img=btn.querySelector('img');
 const txt=btn.childNodes[2]; // Get text node
-img.src="https://unpkg.com/lucide-static@latest/icons/check.svg";
+img.src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/check.svg";
 btn.style.background='#27c93f';
 btn.style.color='#fff';
 if(txt) txt.textContent = " Copied";
 setTimeout(()=>{
-    img.src="https://unpkg.com/lucide-static@latest/icons/copy.svg";
+    img.src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg";
     btn.style.background='';
     btn.style.color='';
     if(txt) txt.textContent = " Copy";
@@ -343,6 +411,83 @@ setTimeout(()=>{
 });
 }
 document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
+
+// --- LIVE STATUS SYSTEM LOGIC ---
+const STATUS_URL = 'https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/status.json';
+
+async function updateGameStatus() {
+    let statusData = {};
+    
+    // Use cache-busting to ensure we always fetch the latest file
+    const fetchUrl = `${STATUS_URL}?t=${new Date().getTime()}`;
+
+    try {
+        const response = await fetch(fetchUrl);
+        if (response.ok) {
+            statusData = await response.json();
+        } else {
+            console.error(`Failed to load status.json. HTTP status: ${response.status}`);
+        }
+    } catch (e) {
+        console.error("Error fetching status.json (Network or CORS issue):", e);
+    }
+
+    const cards = document.querySelectorAll('.game-card[data-game-name]');
+    
+    cards.forEach(card => {
+        const gameName = card.getAttribute('data-game-name');
+        const statusId = statusData[gameName];
+        const iconContainer = card.querySelector('.status-icon-wrapper');
+        
+        if (statusId && iconContainer) {
+            let iconHtml = '';
+            let color = '';
+            let title = '';
+            
+            if (statusId === "1") { // Working
+                iconHtml = '<i data-lucide="circle-check-big"></i>';
+                color = '#4ade80'; 
+                title = 'Status: Working';
+            } else if (statusId === "2") { // Degraded Functionality
+                iconHtml = '<i data-lucide="circle-alert"></i>';
+                color = '#fb923c'; 
+                title = 'Status: Degraded Functionality';
+            } else if (statusId === "3") { // Patched/Broken
+                iconHtml = '<i data-lucide="circle-x"></i>';
+                color = '#f87171'; 
+                title = 'Status: Patched / Broken';
+            } else {
+                iconHtml = '<i data-lucide="help-circle"></i>';
+                color = '#a1a1aa'; 
+                title = 'Status: Unknown Status Code';
+            }
+
+            iconContainer.innerHTML = iconHtml;
+            iconContainer.style.color = color;
+            iconContainer.setAttribute('title', title);
+        } else if (iconContainer) {
+            // Handle games not found in the status file OR if the file failed to load
+            iconContainer.innerHTML = '<i data-lucide="minus-circle"></i>';
+            iconContainer.style.color = '#a1a1aa'; 
+            iconContainer.setAttribute('title', 'Status: Not Listed in Status File');
+        }
+    });
+
+    // Render the new Lucide icons
+    lucide.createIcons();
+}
+
+// Run status update on load and set up the 1-second refresh loop
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons(); // Init static icons from header/features
+    
+    // Initial fetch
+    updateGameStatus(); 
+    
+    // Refetch every 1 second (1000ms)
+    setInterval(updateGameStatus, 1000); 
+});
 </script>
 </body>
 </html>
+
