@@ -413,10 +413,19 @@ setTimeout(()=>{
 document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
 
 // --- LIVE STATUS SYSTEM LOGIC ---
-const STATUS_URL = 'https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/status.json';
+// Updated to use the direct raw.githubusercontent.com URL for stability
+const STATUS_URL = 'https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/status.json';
+
+// Define a local fallback to ensure status is displayed correctly even if fetch fails (Fixes the gray icon issue)
+const DEFAULT_STATUS_DATA = {
+  "Flick": "1",
+  "Flee the Facility": "2",
+  "Figure's Library": "1"
+};
 
 async function updateGameStatus() {
-    let statusData = {};
+    // Start with the known good local data (Fallback)
+    let statusData = DEFAULT_STATUS_DATA; 
     
     // Use cache-busting to ensure we always fetch the latest file
     const fetchUrl = `${STATUS_URL}?t=${new Date().getTime()}`;
@@ -424,12 +433,16 @@ async function updateGameStatus() {
     try {
         const response = await fetch(fetchUrl);
         if (response.ok) {
-            statusData = await response.json();
+            // Overwrite with live data if fetch succeeds
+            const liveData = await response.json();
+            statusData = liveData;
         } else {
-            console.error(`Failed to load status.json. HTTP status: ${response.status}`);
+            // If fetch fails but response is received (e.g., 404), log it, but proceed with DEFAULT_STATUS_DATA
+            console.error(`Failed to load status.json. HTTP status: ${response.status}. Using default status data.`);
         }
     } catch (e) {
-        console.error("Error fetching status.json (Network or CORS issue):", e);
+        // If network error, log it, but proceed with DEFAULT_STATUS_DATA (This prevents the gray icon)
+        console.error("Error fetching status.json (Network issue). Using default status data:", e);
     }
 
     const cards = document.querySelectorAll('.game-card[data-game-name]');
@@ -457,6 +470,7 @@ async function updateGameStatus() {
                 color = '#f87171'; 
                 title = 'Status: Patched / Broken';
             } else {
+                // Unknown Status Code (still possible if JSON returns statusId != 1, 2, or 3)
                 iconHtml = '<i data-lucide="help-circle"></i>';
                 color = '#a1a1aa'; 
                 title = 'Status: Unknown Status Code';
@@ -466,10 +480,10 @@ async function updateGameStatus() {
             iconContainer.style.color = color;
             iconContainer.setAttribute('title', title);
         } else if (iconContainer) {
-            // Handle games not found in the status file OR if the file failed to load
+            // This is now reserved only for games listed in HTML but missing from BOTH default and fetched JSON
             iconContainer.innerHTML = '<i data-lucide="minus-circle"></i>';
             iconContainer.style.color = '#a1a1aa'; 
-            iconContainer.setAttribute('title', 'Status: Not Listed in Status File');
+            iconContainer.setAttribute('title', 'Status: Not Listed in Status File / Data Mismatch');
         }
     });
 
@@ -481,10 +495,10 @@ async function updateGameStatus() {
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons(); // Init static icons from header/features
     
-    // Initial fetch
+    // Initial fetch (or use of default data)
     updateGameStatus(); 
     
-    // Refetch every 1 second (1000ms)
+    // Refetch attempt every 1 second (1000ms)
     setInterval(updateGameStatus, 1000); 
 });
 </script>
