@@ -1,507 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">UNXHub - A Script for Flick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-<!-- Added Lucide Script for dynamic status icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
-@keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
-
-/* Topbar & Navigation */
-.topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:320px;transition:all .3s}
-.topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
-.topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
-.topbar-logo img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 16px rgba(146,3,255,.4)}
-.hamburger{width:28px;height:28px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;transition:.3s}
-.hamburger span{width:100%;height:2px;background:#fff;border-radius:1px;transition:.3s}
-.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
-.hamburger.open span:nth-child(2){opacity:0}
-.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
-.menu-items{display:none;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
-.topbar.open .menu-items{display:flex}
-.menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
-.menu-item:hover{opacity:.7}
-.menu-item img{width:20px;height:20px;filter:invert(1)}
-
-/* Content & Hero */
-.content{padding-top:140px;max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
-.hero{text-align:center;margin-bottom:6rem}
-.hero h1{font-size:5rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(135deg,#e0aaff,#9203ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 8s ease infinite;filter:drop-shadow(0 0 20px rgba(146,3,255,.4))}
-@keyframes gs{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.typewriter{font-size:1.8rem;color:#ccc;min-height:50px;margin-bottom:2rem}
-.typewriter span{color:var(--primary);font-weight:600}
-.cursor{display:inline-block;width:3px;height:1.4em;background:var(--primary);animation:b .8s infinite;margin-left:2px}
-@keyframes b{0%,100%{opacity:1}50%{opacity:0}}
-.get-script-btn{padding:1.2rem 3.5rem;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#9203ff,#4a007a);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:16px;cursor:pointer;box-shadow:0 10px 30px rgba(146,3,255,.3);transition:all .3s}
-.get-script-btn:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(146,3,255,.5)}
-
-/* Status Legend - New Addition */
-.status-legend {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-.status-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    background: rgba(255,255,255,0.03);
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-.status-item svg { width: 16px; height: 16px; }
-.status-working { color: #4ade80; }
-.status-degraded { color: #fb923c; }
-.status-patched { color: #f87171; }
-
-/* Games Grid */
-.section-title{font-size:2.5rem;font-weight:700;margin:3rem 0 1.5rem;display:flex;align-items:center;gap:1rem}
-.section-title::before{content:'';width:6px;height:40px;background:var(--primary);border-radius:3px}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-bottom:5rem}
-.game-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:1.5rem;cursor:pointer;transition:all .3s;overflow:hidden}
-.game-card:hover{transform:translateY(-6px);border-color:var(--primary)}
-.game-thumbnail-container{height:180px;border-radius:12px;overflow:hidden;margin-bottom:1rem;background:#111;position:relative;}
-.game-thumbnail{width:100%;height:100%;object-fit:cover}
-.game-info h3{font-size:1.5rem;font-weight:600;margin-bottom:1rem; display: flex; align-items: center; justify-content: space-between;}
-.game-actions{height:0;opacity:0;overflow:hidden;transition:all .3s}
-.game-card.active .game-actions{height:auto;opacity:1;margin-top:1rem;padding-top:.5rem}
-.action-btn{border:none;border-radius:8px;font-weight:600;padding:.7rem;display:flex;align-items:center;justify-content:center;gap:.5rem;color:#fff;font-size:.9rem;cursor:pointer}
-.action-btn img{filter:invert(1);width:16px;height:16px}
-.play-btn{background:var(--primary);width:100%}
-
-/* Status Icon in Card */
-.status-icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.3);
-}
-.status-icon-wrapper svg {
-    width: 20px;
-    height: 20px;
-}
-
-/* Features */
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
-.feature-card{background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;transition:transform .3s}
-.feature-card:hover{transform:translateY(-5px)}
-.feature-icon{width:40px;height:40px;filter:invert(1);margin-bottom:1rem}
-.feature-title{font-size:1.3rem;font-weight:700;margin-bottom:.5rem}
-.feature-desc{color:#aaa;line-height:1.6;font-size:.95rem}
-.feature-desc a{color:#fff;background:linear-gradient(135deg,#9203ff,#4a00e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:.3s}
-.feature-desc a:hover{opacity:.8}
-
-/* MODAL / POPUP */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:10000;padding:1rem;opacity:0;transition:opacity .3s ease}
-.modal-overlay.open{display:flex;opacity:1}
-
-.popup-card{
-    max-width:800px;
-    width:100%;
-    background: rgba(15, 15, 20, 0.75);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(146, 3, 255, 0.2);
-    border-radius: 28px;
-    overflow:hidden;
-    box-shadow: 0 25px 80px rgba(0,0,0,0.8), 0 0 30px rgba(146,3,255,0.15);
-    transform: scale(0.95);
-    transition: transform .3s cubic-bezier(0.16,1,0.3,1);
-    display: flex;
-    flex-direction: column;
-}
-.modal-overlay.open .popup-card { transform: scale(1); }
-
-.popup-header{
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.popup-header h2{
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #e0aaff, #9203ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 0;
-}
-
-.close-popup{
-    width: 36px;
-    height: 36px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all .3s;
-    font-size: 1.5rem;
-    color: #aaa;
-    border: 1px solid transparent;
-}
-.close-popup:hover{
-    background: rgba(255,95,86,0.15);
-    color: #ff5f56;
-    border-color: rgba(255,95,86,0.3);
-}
-
-.popup-body{
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.code-wrapper {
-    position: relative;
-    border-radius: 16px;
-    background: #08080a;
-    border: 1px solid rgba(255,255,255,0.08);
-    overflow: hidden;
-}
-
-.code-block {
-    margin: 0;
-    padding: 1.5rem;
-    overflow-x: auto;
-}
-.code-block code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    line-height: 1.6;
-}
-
-.copy-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 8px 16px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all .2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #ccc;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-.copy-btn:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 5px 15px rgba(146,3,255,0.3);
-}
-.copy-btn img {
-    width: 16px;
-    height: 16px;
-    filter: invert(1);
-}
-
-.tos-footer{
-    text-align: center;
-    font-size: 0.9rem;
-    color: #888;
-    padding-top: 0.5rem;
-}
-.tos-footer a{
-    color: #e0aaff;
-    text-decoration: none;
-    transition: .3s;
-}
-.tos-footer a:hover{
-    color: #fff;
-    text-shadow: 0 0 10px rgba(146,3,255,0.6);
-}
-
-@media(max-width:768px){.hero h1{font-size:3.2rem}.typewriter{font-size:1.4rem}.content{padding-top:160px}.popup-header h2{font-size:1.6rem}.popup-body{padding:1.5rem}.code-block{padding:1.5rem}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNXHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh; width: 100%; overflow-x: hidden; overflow-y: auto;
+            font-family: 'Raleway', sans-serif; display: flex; flex-direction: column; align-items: center;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+            color: white; padding-bottom: 100px;
+        }
+        .navbar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1000px;
+            border: 1px solid transparent;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) padding-box,
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.4), rgba(0, 0, 0, 0)) border-box;
+            backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border-radius: 16px; padding: 10px 20px;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .nav-title { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: 0.5px; }
+        .menu-btn { background: none; border: none; color: white; cursor: pointer; transition: transform 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { color: #8A2BE2; transform: scale(1.1); }
+        .dropdown-menu {
+            position: absolute; top: 70px; right: 0;
+            border: 1px solid transparent;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)) padding-box,
+                        linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.2), rgba(0, 0, 0, 0)) border-box;
+            backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: 12px; padding: 10px; width: 200px; display: flex; flex-direction: column; gap: 5px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 1001;
+        }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: #aaa; text-decoration: none; border-radius: 8px; transition: background 0.2s, color 0.2s; font-weight: 600; font-size: 0.95rem; }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 20px 20px; animation: walkGridDiagonal 0.4s linear infinite;
+        }
+        @keyframes walkGridDiagonal { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
+        .content-wrapper { margin-top: 25vh; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 1200px; }
+        .main-title {
+            font-size: 5.5rem; font-weight: 900; letter-spacing: -2px;
+            background: linear-gradient(135deg, #8A2BE2, #0000FF, #8A2BE2, #0000FF); background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientWalkDiagonal 3s linear infinite; text-align: center;
+        }
+        @keyframes gradientWalkDiagonal { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        .subtitle { font-size: 1.5rem; margin-top: 10px; font-weight: 400; color: #888; text-align: center; margin-bottom: 40px; }
+        .highlight-text { font-weight: 900; color: #fff; }
+        .cursor { display: inline-block; width: 2px; height: 1.2em; background-color: #fff; margin-left: 4px; vertical-align: bottom; border-radius: 2px; animation: blink 0.7s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .purple-gradient-btn {
+            padding: 14px 30px; font-size: 1.1rem; font-weight: 700; color: white; border: none; border-radius: 50px; cursor: pointer;
+            font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+            background: linear-gradient(135deg, #6200ea, #b388ff); background-size: 200% 200%; background-position: 0% 50%;
+            transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .purple-gradient-btn:hover { background-position: 100% 50%; box-shadow: 0 0 30px rgba(179, 136, 255, 0.4); transform: translateY(-2px); }
+        .purple-gradient-btn:active { transform: translateY(0); }
+        .games-section { width: 90%; max-width: 1000px; margin-top: 80px; display: flex; flex-direction: column; gap: 30px; }
+        .section-header { display: flex; align-items: center; gap: 15px; }
+        .header-line {
+            width: 6px; height: 45px; border-radius: 4px;
+            background: linear-gradient(to bottom, #0000FF, #8A2BE2, #0000FF); background-size: 100% 200%;
+            animation: walkLineVertical 2s linear infinite;
+        }
+        @keyframes walkLineVertical { 0% { background-position: 0% 0%; } 100% { background-position: 0% 200%; } }
+        .section-title { font-size: 2.5rem; font-weight: 800; color: white; }
+        .games-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .game-card {
+            width: 300px; position: relative; border: 1px solid transparent;
+            background: linear-gradient(#111, #111) padding-box, linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05), transparent) border-box;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px; overflow: hidden; transition: all 0.3s ease; cursor: pointer;
+            display: flex; flex-direction: column; user-select: none; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .game-card:hover { transform: translateY(-5px); background: linear-gradient(#161616, #161616) padding-box, linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(138, 43, 226, 0.3), transparent) border-box; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
+        .game-card.active-card { transform: scale(1.02); background: linear-gradient(#0a0a0a, #0a0a0a) padding-box, linear-gradient(135deg, #8A2BE2, #4b0082) border-box; box-shadow: 0 0 30px rgba(138, 43, 226, 0.2); }
+        .card-banner { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid rgba(255, 255, 255, 0.05); filter: brightness(0.8); transition: filter 0.3s ease; }
+        .game-card:hover .card-banner, .game-card.active-card .card-banner { filter: brightness(1); }
+        .card-info { padding: 20px; }
+        .card-title { font-size: 1.2rem; color: #ccc; text-align: center; font-weight: 300; transition: all 0.2s ease; }
+        .game-card.active-card .card-title { font-weight: 900; letter-spacing: 1px; color: white; text-shadow: 0 0 10px rgba(138, 43, 226, 0.5); }
+        .status-badge {
+            position: absolute; top: 10px; right: 10px; z-index: 10;
+            border: 1px solid transparent;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) padding-box, linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)) border-box;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 6px;
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.5s ease;
+        }
+        .status-badge.visible { opacity: 1; }
+        .status-working { color: #27c93f; text-shadow: 0 0 10px rgba(39, 201, 63, 0.6); }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .mac-window {
+            width: 90%; max-width: 600px; background: #000000; border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,1); border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .mac-window { transform: scale(1); }
+        .window-header { height: 36px; background: #080808; display: flex; align-items: center; padding-left: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .traffic-lights { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
+        .dot.red { background-color: #ff5f56; } .dot.yellow { background-color: #ffbd2e; } .dot.green { background-color: #27c93f; }
+        .window-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .code-container {
+            background: #050505; padding: 15px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.08); white-space: pre-wrap; word-break: break-all; line-height: 1.5; position: relative;
+        }
+        .lua-keyword { color: #d19a66; } .lua-func { color: #56b6c2; } .lua-string { color: #98c379; } .lua-paren { color: #abb2bf; }
+        @media (max-width: 768px) {
+            .navbar { width: 95%; top: 10px; } .main-title { font-size: 3.5rem; } .subtitle { font-size: 1.1rem; } .mac-window { width: 95%; } .purple-gradient-btn { font-size: 0.9rem; padding: 12px 24px; }
+            .games-grid { flex-direction: column; align-items: center; } .game-card { width: 90%; }
+        }
+    </style>
 </head>
 <body>
-
-<nav class="topbar" id="topbar">
-<div class="topbar-logo">
-<img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="UNXHub">
-<span>UNXHub</span>
-</div>
-<div class="hamburger" onclick="document.getElementById('topbar').classList.toggle('open')">
-<span></span><span></span><span></span>
-</div>
-<div class="menu-items">
-<div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
-<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/home.svg"> Home
-</div>
-<div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
-<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/file-text.svg"> Terms Of Service
-</div>
-</div>
-</nav>
-
-<main class="content">
-<section class="hero">
-<h1>UNXHub</h1>
-<div class="typewriter">A Script for <span id="game-name">Flick</span><span class="cursor"></span></div>
-<button class="get-script-btn" onclick="openModal()">Get Script</button>
-</section>
-
-<section>
-<h2 class="section-title">Supported Games</h2>
-
-<!-- Status Legend -->
-<div class="status-legend">
-    <div class="status-item">
-        <i data-lucide="circle-check-big" class="status-working"></i> <span>Working</span>
-    </div>
-    <div class="status-item">
-        <i data-lucide="circle-alert" class="status-degraded"></i> <span>Degraded</span>
-    </div>
-    <div class="status-item">
-        <i data-lucide="circle-x" class="status-patched"></i> <span>Patched</span>
-    </div>
-</div>
-
-<!-- Added data-game-name attributes to identify cards for status updates -->
-<div class="games-grid" id="games-grid">
-
-    <div class="game-card" onclick="toggleCard(this)" data-game-name="Flick">
-        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flick.webp" class="game-thumbnail" alt="Flick"></div>
-        <div class="game-info">
-            <h3>
-                Flick 
-                <span class="status-icon-wrapper" id="status-Flick"></span>
-            </h3>
+    <div class="background-grid"></div>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="Logo" class="nav-logo">
+            <span class="nav-title">UNXHub</span>
         </div>
-        <div class="game-actions">
-            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/136801880565837/Flick','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-        </div>
-    </div>
-
-    <div class="game-card" onclick="toggleCard(this)" data-game-name="Flee the Facility">
-        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Flee.webp" class="game-thumbnail" alt="Flee the Facility"></div>
-        <div class="game-info">
-            <h3>
-                Flee the Facility 
-                <span class="status-icon-wrapper" id="status-Flee the Facility"></span>
-            </h3>
-        </div>
-        <div class="game-actions">
-            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/893973440/Flee-the-Facility','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-        </div>
-    </div>
-
-    <div class="game-card" onclick="toggleCard(this)" data-game-name="Figure's Library">
-        <div class="game-thumbnail-container"><img src="https://github.com/not-gato/GetUNX/raw/refs/heads/main/Assets/Figure.webp" class="game-thumbnail" alt="Figure's Library"></div>
-        <div class="game-info">
-            <h3>
-                Figure's Library 
-                <span class="status-icon-wrapper" id="status-Figure's Library"></span>
-            </h3>
-        </div>
-        <div class="game-actions">
-            <button class="action-btn play-btn" onclick="event.stopPropagation();window.open('https://www.roblox.com/games/12240122896/Figures-Library','_blank')"><img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/play.svg" width="16"> Play</button>
-        </div>
-    </div>
-    
-</div>
-</section>
-
-<section>
-<h2 class="section-title">Why Use UNXHub?</h2>
-<div class="features-grid">
-<div class="feature-card">
-<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/github.svg" class="feature-icon">
-<h3 class="feature-title">Open Source</h3>
-<p class="feature-desc">Fully transparent code. <a href="https://github.com/not-gato/UNX" target="_blank">View on GitHub</a></p>
-</div>
-<div class="feature-card">
-<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/zap.svg" class="feature-icon">
-<h3 class="feature-title">Lightning Fast</h3>
-<p class="feature-desc">Optimized for instant execution on PC & mobile.</p>
-</div>
-<div class="feature-card">
-<img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/smartphone.svg" class="feature-icon">
-<h3 class="feature-title">Mobile Ready</h3>
-<p class="feature-desc">Perfect touch controls with Obsidian UI Library.</p>
-</div>
-</div>
-</section>
-</main>
-
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
-    <div class="popup-card" onclick="event.stopPropagation()">
-        <div class="popup-header">
-            <h2>UNXHub</h2>
-            <div class="close-popup" onclick="closeModal()">×</div>
-        </div>
-        
-        <div class="popup-body">
-            <div class="code-wrapper">
-                <!-- Example Lua script -->
-                <pre class="code-block"><code class="language-lua">getgenv().unxns = { loadfrom = "Website" }
-loadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()</code></pre>
-                <button class="copy-btn" onclick="copyScriptCode(this)">
-                    <img src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg" alt="Copy">
-                    Copy
-                </button>
+        <div style="position: relative;">
+            <button class="menu-btn" id="menuToggle"><i data-lucide="menu" width="32" height="32"></i></button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="https://getunx.qzz.io/" class="menu-item"><i data-lucide="home" width="20" height="20"></i> Home</a>
+                <a href="tos.html" class="menu-item"><i data-lucide="file-text" width="20" height="20"></i> Terms Of Service</a>
             </div>
-            
-            <div class="tos-footer">
-                By executing this script you accept our <a href="https://getunx.qzz.io/tos.html" target="_blank">Terms of Service</a>.
+        </div>
+    </nav>
+    <div class="content-wrapper">
+        <h1 class="main-title">UNXHub</h1>
+        <div class="subtitle">A Script for <span class="highlight-text" id="typewriter-text"></span><span class="cursor"></span></div>
+        <button class="purple-gradient-btn" id="openScriptBtn">Get Script <i data-lucide="code" width="20" height="20"></i></button>
+        <div class="games-section">
+            <div class="section-header"><div class="header-line"></div><h2 class="section-title">Supported Games</h2></div>
+            <div class="games-grid">
+                <div class="game-card" data-game="Flick">
+                    <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/Flick.webp" alt="Flick" class="card-banner">
+                    <div class="card-info"><div class="card-title">Flick</div></div>
+                </div>
+                <div class="game-card" data-game="Flee The Facility">
+                    <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/Flee.webp" alt="Flee The Facility" class="card-banner">
+                    <div class="card-info"><div class="card-title">Flee The Facility</div></div>
+                </div>
+                <div class="game-card" data-game="Universal">
+                    <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/Universal.png" alt="Universal" class="card-banner">
+                    <div class="card-info"><div class="card-title">Universal</div></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script>
-hljs.highlightAll();
-const games=["Flick","Flee the Facility","Figure's Library"];
-let currentGame="Flick";
-const gameElement=document.getElementById("game-name");
-const pageTitle=document.getElementById("page-title");
-function updateTitle(){pageTitle.textContent=`UNXHub - A Script for ${currentGame}`}
-function typeWriter(t,cb){let i=0;gameElement.textContent="";const int=setInterval(()=>{if(i<t.length){gameElement.textContent+=t.charAt(i);i++}else{clearInterval(int);if(cb)cb()}},60)}
-function deleteWriter(cb){const int=setInterval(()=>{if(gameElement.textContent.length>0)gameElement.textContent=gameElement.textContent.slice(0,-1);else{clearInterval(int);if(cb)cb()}},40)}
-function getRandomGame(ex){const a=games.filter(g=>g!==ex);return a[Math.floor(Math.random()*a.length)]}
-function cycleGame(){
-deleteWriter(()=>{setTimeout(()=>{currentGame=getRandomGame(currentGame);typeWriter(currentGame,updateTitle);updateTitle();},200)})
-}
-setTimeout(()=>{setInterval(cycleGame,4500);cycleGame()},2000);
-updateTitle();
-function toggleCard(c){
-c.classList.toggle('active');
-document.querySelectorAll('.game-card').forEach(card=>{if(card!==c)card.classList.remove('active')});
-}
-const modal=document.getElementById('modal');
-function openModal(){modal.classList.add('open')}
-function closeModal(){modal.classList.remove('open')}
-function copyScriptCode(btn){
-const code=`getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()`;
-navigator.clipboard.writeText(code).then(()=>{
-const img=btn.querySelector('img');
-const txt=btn.childNodes[2]; // Get text node
-img.src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/check.svg";
-btn.style.background='#27c93f';
-btn.style.color='#fff';
-if(txt) txt.textContent = " Copied";
-setTimeout(()=>{
-    img.src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg";
-    btn.style.background='';
-    btn.style.color='';
-    if(txt) txt.textContent = " Copy";
-},2000);
-});
-}
-document.addEventListener('click',e=>{if(!e.target.closest('.topbar'))document.getElementById('topbar').classList.remove('open')})
-
-// --- LIVE STATUS SYSTEM LOGIC ---
-// Updated to use the direct raw.githubusercontent.com URL for stability
-const STATUS_URL = 'https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/status.json';
-
-// Define a local fallback to ensure status is displayed correctly even if fetch fails (Fixes the gray icon issue)
-const DEFAULT_STATUS_DATA = {
-  "Flick": "1",
-  "Flee the Facility": "2",
-  "Figure's Library": "1"
-};
-
-async function updateGameStatus() {
-    // Start with the known good local data (Fallback)
-    let statusData = DEFAULT_STATUS_DATA; 
-    
-    // Use cache-busting to ensure we always fetch the latest file
-    const fetchUrl = `${STATUS_URL}?t=${new Date().getTime()}`;
-
-    try {
-        const response = await fetch(fetchUrl);
-        if (response.ok) {
-            // Overwrite with live data if fetch succeeds
-            const liveData = await response.json();
-            statusData = liveData;
-        } else {
-            // If fetch fails but response is received (e.g., 404), log it, but proceed with DEFAULT_STATUS_DATA
-            console.error(`Failed to load status.json. HTTP status: ${response.status}. Using default status data.`);
+    <div class="modal-overlay" id="scriptModal">
+        <div class="mac-window">
+            <div class="window-header"><div class="traffic-lights"><div class="dot red" id="closeModal"></div> <div class="dot yellow"></div> <div class="dot green"></div></div></div>
+            <div class="window-body">
+                <div class="code-container" id="codeText"><span class="lua-func">getgenv</span><span class="lua-paren">()</span>.unxns = { loadfrom = <span class="lua-string">"Website"</span> }
+<span class="lua-func">loadstring</span><span class="lua-paren">(</span><span class="lua-func">game</span>:<span class="lua-func">HttpGet</span><span class="lua-paren">(</span><span class="lua-string">"https://apigetunx.vercel.app/UNX.lua"</span>, <span class="lua-keyword">true</span><span class="lua-paren">))()</span></div>
+                <button class="purple-gradient-btn" id="copyBtn" style="width: 100%;"><span>Copy Script</span> <i data-lucide="copy" width="20" height="20"></i></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        lucide.createIcons();
+        const menuToggle = document.getElementById('menuToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); dropdownMenu.classList.toggle('show'); });
+        document.addEventListener('click', (e) => { if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) { dropdownMenu.classList.remove('show'); } });
+        const openBtn = document.getElementById('openScriptBtn');
+        const modal = document.getElementById('scriptModal');
+        const closeBtn = document.getElementById('closeModal');
+        const copyBtn = document.getElementById('copyBtn');
+        openBtn.addEventListener('click', () => { modal.classList.add('active'); });
+        closeBtn.addEventListener('click', () => { modal.classList.remove('active'); });
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        copyBtn.addEventListener('click', () => {
+            const rawCode = `getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()`;
+            navigator.clipboard.writeText(rawCode).then(() => {
+                copyBtn.innerHTML = `<span>Copied!</span> <i data-lucide="check" width="20" height="20"></i>`;
+                lucide.createIcons();
+                setTimeout(() => { copyBtn.innerHTML = `<span>Copy Script</span> <i data-lucide="copy" width="20" height="20"></i>`; lucide.createIcons(); }, 2000);
+            });
+        });
+        const cards = document.querySelectorAll('.game-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => { if (c !== card) c.classList.remove('active-card'); });
+                card.classList.toggle('active-card');
+            });
+        });
+        function setGameStatus() {
+            const gameCards = document.querySelectorAll('.game-card');
+            gameCards.forEach(card => {
+                const badge = document.createElement('div');
+                badge.className = 'status-badge status-working';
+                badge.innerHTML = `<i data-lucide="check-circle" width="14" height="14"></i> <span>Working</span>`;
+                card.appendChild(badge);
+                lucide.createIcons();
+                setTimeout(() => badge.classList.add('visible'), 100);
+            });
         }
-    } catch (e) {
-        // If network error, log it, but proceed with DEFAULT_STATUS_DATA (This prevents the gray icon)
-        console.error("Error fetching status.json (Network issue). Using default status data:", e);
-    }
-
-    const cards = document.querySelectorAll('.game-card[data-game-name]');
-    
-    cards.forEach(card => {
-        const gameName = card.getAttribute('data-game-name');
-        const statusId = statusData[gameName];
-        const iconContainer = card.querySelector('.status-icon-wrapper');
-        
-        if (statusId && iconContainer) {
-            let iconHtml = '';
-            let color = '';
-            let title = '';
-            
-            if (statusId === "1") { // Working
-                iconHtml = '<i data-lucide="circle-check-big"></i>';
-                color = '#4ade80'; 
-                title = 'Status: Working';
-            } else if (statusId === "2") { // Degraded Functionality
-                iconHtml = '<i data-lucide="circle-alert"></i>';
-                color = '#fb923c'; 
-                title = 'Status: Degraded Functionality';
-            } else if (statusId === "3") { // Patched/Broken
-                iconHtml = '<i data-lucide="circle-x"></i>';
-                color = '#f87171'; 
-                title = 'Status: Patched / Broken';
-            } else {
-                // Unknown Status Code (still possible if JSON returns statusId != 1, 2, or 3)
-                iconHtml = '<i data-lucide="help-circle"></i>';
-                color = '#a1a1aa'; 
-                title = 'Status: Unknown Status Code';
-            }
-
-            iconContainer.innerHTML = iconHtml;
-            iconContainer.style.color = color;
-            iconContainer.setAttribute('title', title);
-        } else if (iconContainer) {
-            // This is now reserved only for games listed in HTML but missing from BOTH default and fetched JSON
-            iconContainer.innerHTML = '<i data-lucide="minus-circle"></i>';
-            iconContainer.style.color = '#a1a1aa'; 
-            iconContainer.setAttribute('title', 'Status: Not Listed in Status File / Data Mismatch');
+        const words = ["[FPS] Flick", "Flee The Facility", "Any Game!"];
+        const textElement = document.getElementById("typewriter-text");
+        let currentWordIndex = -1; let charIndex = 0; let isDeleting = false;
+        const typingSpeed = 100; const deletingSpeed = 50; const pauseTime = 5000;
+        function getRandomWordIndex() { let newIndex; do { newIndex = Math.floor(Math.random() * words.length); } while (newIndex === currentWordIndex); return newIndex; }
+        function type() {
+            if (currentWordIndex === -1) { currentWordIndex = getRandomWordIndex(); }
+            const currentWord = words[currentWordIndex];
+            if (isDeleting) { textElement.textContent = currentWord.substring(0, charIndex - 1); charIndex--; }
+            else { textElement.textContent = currentWord.substring(0, charIndex + 1); charIndex++; }
+            if (!isDeleting && charIndex === currentWord.length) { isDeleting = true; setTimeout(type, pauseTime); return; }
+            if (isDeleting && charIndex === 0) { isDeleting = false; currentWordIndex = getRandomWordIndex(); }
+            const speed = isDeleting ? deletingSpeed : typingSpeed; setTimeout(type, speed);
         }
-    });
-
-    // Render the new Lucide icons
-    lucide.createIcons();
-}
-
-// Run status update on load and set up the 1-second refresh loop
-document.addEventListener('DOMContentLoaded', () => {
-    lucide.createIcons(); // Init static icons from header/features
-    
-    // Initial fetch (or use of default data)
-    updateGameStatus(); 
-    
-    // Refetch attempt every 1 second (1000ms)
-    setInterval(updateGameStatus, 1000); 
-});
-</script>
+        document.addEventListener('DOMContentLoaded', () => { type(); setGameStatus(); });
+    </script>
 </body>
 </html>
-
