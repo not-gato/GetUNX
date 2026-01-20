@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNXHub - Key System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh; width: 100%; overflow-x: hidden; overflow-y: hidden;
+            font-family: 'Raleway', sans-serif; display: flex; flex-direction: column; align-items: center;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+            color: white;
+        }
+      
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 20px 20px; animation: walkGridDiagonal 4s linear infinite;
+        }
+        @keyframes walkGridDiagonal { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
+      
+        .navbar {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1000px;
+            border: 1px solid transparent;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) padding-box,
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.4), rgba(0, 0, 0, 0)) border-box;
+            backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border-radius: 16px; padding: 10px 20px;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
+        }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .nav-title { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: 0.5px; }
+        .menu-btn { background: none; border: none; color: white; cursor: pointer; transition: transform 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
+        .menu-btn:hover { color: #8A2BE2; transform: scale(1.1); }
+      
+        .dropdown-menu {
+            position: absolute; top: 70px; right: 0;
+            border: 1px solid transparent;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)) padding-box,
+                        linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.2), rgba(0, 0, 0, 0)) border-box;
+            backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
+            border-radius: 12px; padding: 10px; width: 200px; display: flex; flex-direction: column; gap: 5px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 1001;
+        }
+        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: #aaa; text-decoration: none; border-radius: 8px; transition: background 0.2s, color 0.2s; font-weight: 600; font-size: 0.95rem; }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+                          
+        .content-wrapper { 
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            width: 100%; max-width: 1000px; padding: 20px; text-align: center;
+        }
+
+        .main-title {
+            font-size: 5rem; font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(135deg, #8A2BE2, #0000FF, #8A2BE2, #0000FF); background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientWalkDiagonal 3s linear infinite; 
+        }
+        @keyframes gradientWalkDiagonal { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+
+        .subtitle { 
+            font-size: 1.2rem; max-width: 600px; color: #888; margin-bottom: 40px; line-height: 1.6;
+        }
+        .subtitle b { color: white; font-weight: 800; }
+
+        .purple-gradient-btn {
+            text-decoration: none;
+            padding: 16px 40px; font-size: 1.2rem; font-weight: 700; color: white; border: none; border-radius: 50px; cursor: pointer;
+            font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+            background: linear-gradient(135deg, #6200ea, #b388ff); background-size: 200% 200%; background-position: 0% 50%;
+            transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .purple-gradient-btn:hover { background-position: 100% 50%; box-shadow: 0 0 30px rgba(179, 136, 255, 0.4); transform: translateY(-5px); }
+        .purple-gradient-btn:active { transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .navbar { width: 95%; top: 10px; } 
+            .main-title { font-size: 3rem; } 
+            .subtitle { font-size: 1rem; width: 90%; } 
+            .purple-gradient-btn { font-size: 1rem; padding: 14px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="Logo" class="nav-logo">
+            <span class="nav-title">UNXHub</span>
+        </div>
+        <div style="position: relative;">
+            <button class="menu-btn" id="menuToggle"><i data-lucide="menu" width="32" height="32"></i></button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="https://getunx.qzz.io/" class="menu-item"><i data-lucide="home" width="20" height="20"></i> Home</a>
+                <a href="tos.html" class="menu-item"><i data-lucide="file-text" width="20" height="20"></i> Terms Of Service</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1 class="main-title">UNXHub Key</h1>
+        <p class="subtitle">
+            By doing this process, you help the developer to make <b>UNXHub</b> better!
+        </p>
+        
+        <!-- guh -->
+      
+        <a href="https://link-hub.net/3002759/pyk14s0B2WwH" target="_blank" class="purple-gradient-btn">
+            Get Key <i data-lucide="external-link" width="20" height="20"></i>
+        </a>
+    </div>
+
+    <script>
+        lucide.createIcons();
+      
+        const menuToggle = document.getElementById('menuToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        menuToggle.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            dropdownMenu.classList.toggle('show'); 
+        });
+        
+        document.addEventListener('click', (e) => { 
+            if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) { 
+                dropdownMenu.classList.remove('show'); 
+            } 
+        });
+    </script>
+</body>
+</html>
