@@ -1,169 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 - UNXHub</title>
-<style>
-:root{--primary:#9203ff;--bg-dark:#050505;--glass-bg:rgba(20,20,20,0.6);--glass-border:rgba(255,255,255,0.1)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-dark);color:#fff;min-height:100vh;overflow-x:hidden;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;animation:g 40s linear infinite}
-@keyframes g{0%{background-position:0 0}100%{background-position:60px 60px}}
-
-/* Navigation (Identical to Main Page) */
-.topbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);height:56px;background:rgba(5,5,5,.95);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 1.8rem;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.6);gap:16px;min-width:320px;transition:all .3s}
-.topbar.open{height:auto;padding:1.5rem 1.8rem;border-radius:20px}
-.topbar-logo{display:flex;align-items:center;gap:16px;font-weight:700;font-size:1.18rem}
-.topbar-logo img{width:36px;height:36px;border-radius:10px;box-shadow:0 4px 16px rgba(146,3,255,.4)}
-.hamburger{width:28px;height:28px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:5px;transition:.3s}
-.hamburger span{width:100%;height:2px;background:#fff;border-radius:1px;transition:.3s}
-.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
-.hamburger.open span:nth-child(2){opacity:0}
-.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
-.menu-items{display:none;flex-direction:column;gap:1.2rem;margin-top:1.5rem}
-.topbar.open .menu-items{display:flex}
-.menu-item{display:flex;align-items:center;gap:12px;font-size:1.05rem;transition:.2s;cursor:pointer}
-.menu-item:hover{opacity:.7}
-.menu-item img{width:20px;height:20px;filter:invert(1)}
-
-/* 404 Specific Styles */
-.error-container{
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
-    position: relative;
-}
-
-.glitch-wrapper {
-    position: relative;
-    margin-bottom: 1rem;
-}
-
-.error-code {
-    font-size: 10rem;
-    font-weight: 900;
-    line-height: 1;
-    background: linear-gradient(135deg, #fff, #9203ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    position: relative;
-    text-shadow: 0 0 30px rgba(146,3,255,0.5);
-    animation: pulse 3s infinite;
-}
-
-/* Tech decoration behind 404 */
-.error-code::before {
-    content: '404';
-    position: absolute;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: linear-gradient(135deg, #9203ff, #fff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    opacity: 0.3;
-    transform: translate(4px, 4px);
-    z-index: -1;
-    filter: blur(4px);
-}
-
-.error-msg {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-}
-
-.lua-error {
-    font-family: 'Consolas', 'Monaco', monospace;
-    background: rgba(20, 10, 25, 0.6);
-    border: 1px solid rgba(255, 95, 86, 0.3);
-    color: #ff5f56;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 3rem;
-    font-size: 1.1rem;
-    backdrop-filter: blur(10px);
-    display: inline-block;
-}
-
-.home-btn {
-    padding: 1rem 3rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #9203ff, #4a007a);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 10px 30px rgba(146,3,255,.3);
-    transition: all .3s;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
-.home-btn:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 15px 40px rgba(146,3,255,.5);
-}
-.home-btn img { width: 20px; height: 20px; filter: invert(1); }
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(0.98); }
-}
-
-@media(max-width: 768px) {
-    .error-code { font-size: 6rem; }
-    .error-msg { font-size: 1.5rem; }
-    .lua-error { font-size: 0.9rem; padding: 0.8rem; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - UNXHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            height: 100vh; width: 100%; overflow: hidden;
+            font-family: 'Raleway', sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); color: white;
+        }
+        .background-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 20px 20px; animation: walkGridDiagonal 0.4s linear infinite;
+        }
+        @keyframes walkGridDiagonal { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
+        .error-code {
+            font-size: 10rem; font-weight: 900; letter-spacing: -5px; line-height: 1;
+            background: linear-gradient(135deg, #8A2BE2, #0000FF, #8A2BE2, #0000FF); background-size: 300% 300%;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradientWalkDiagonal 3s linear infinite;
+        }
+        @keyframes gradientWalkDiagonal { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        .error-message { font-size: 2rem; font-weight: 300; color: #ccc; margin-bottom: 30px; }
+        .purple-gradient-btn {
+            padding: 14px 30px; font-size: 1.1rem; font-weight: 700; color: white; border: none; border-radius: 50px; cursor: pointer;
+            font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
+            background: linear-gradient(135deg, #6200ea, #b388ff); background-size: 200% 200%; background-position: 0% 50%;
+            transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px;
+        }
+        .purple-gradient-btn:hover { background-position: 100% 50%; box-shadow: 0 0 30px rgba(179, 136, 255, 0.4); transform: translateY(-2px); }
+    </style>
 </head>
 <body>
-
-<nav class="topbar" id="topbar">
-<div class="topbar-logo">
-<img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="UNXHub">
-<span>UNXHub</span>
-</div>
-<div class="hamburger" onclick="document.getElementById('topbar').classList.toggle('open')">
-<span></span><span></span><span></span>
-</div>
-<div class="menu-items">
-<div class="menu-item" onclick="window.location='https://getunx.qzz.io/'">
-<img src="https://unpkg.com/lucide-static@latest/icons/home.svg"> Home
-</div>
-<div class="menu-item" onclick="window.location='https://getunx.qzz.io/tos.html'">
-<img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg"> Terms Of Service
-</div>
-</div>
-</nav>
-
-<main class="error-container">
-    <div class="glitch-wrapper">
-        <div class="error-code">404</div>
-    </div>
-    <h2 class="error-msg">Execution Failed</h2>
-    
-    <div class="lua-error">
-        error: workspace.Pages["Requested_URL"] is nil
-    </div>
-
-    <a href="https://getunx.qzz.io/" class="home-btn">
-        <img src="https://unpkg.com/lucide-static@latest/icons/arrow-left.svg" alt="Back">
-        Return Home
+    <div class="background-grid"></div>
+    <div class="error-code">404</div>
+    <div class="error-message">Page Not Found</div>
+    <a href="https://getunx.qzz.io/" class="purple-gradient-btn">
+        Go Back Home <i data-lucide="home" width="20" height="20"></i>
     </a>
-</main>
-
-<script>
-
-document.addEventListener('click',e=>{
-    if(!e.target.closest('.topbar')) document.getElementById('topbar').classList.remove('open')
-});
-</script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
