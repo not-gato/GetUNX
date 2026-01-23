@@ -176,7 +176,7 @@
             <div class="window-header"><div class="traffic-lights"><div class="dot red" id="closeModal"></div> <div class="dot yellow"></div> <div class="dot green"></div></div></div>
             <div class="window-body">
                 <div class="code-container" id="codeText"><span class="lua-func">getgenv</span><span class="lua-paren">()</span>.unxns = { loadfrom = <span class="lua-string">"Website"</span> }
-<span class="lua-func">loadstring</span><span class="lua-paren">(</span><span class="lua-func">game</span>:<span class="lua-func">HttpGet</span><span class="lua-paren">(</span><span class="lua-string">"https://apigetunx.vercel.app/UNX.lua"</span>, <span class="lua-keyword">true</span><span class="lua-paren">))()</span></div>
+<span class="lua-func">loadstring</span><span class="lua-paren">(</span><span class="lua-func">game</span>:<span class="lua-func">HttpGet</span><span class="lua-paren">(</span><span class="lua-string">"https://api.getunx.cc/UNX.lua"</span>, <span class="lua-keyword">true</span><span class="lua-paren">))()</span></div>
                 <button class="purple-gradient-btn" id="copyBtn" style="width: 100%;"><span>Copy Script</span> <i data-lucide="copy" width="20" height="20"></i></button>
             </div>
         </div>
@@ -195,7 +195,7 @@
         closeBtn.addEventListener('click', () => { modal.classList.remove('active'); });
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
         copyBtn.addEventListener('click', () => {
-            const rawCode = `getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://apigetunx.vercel.app/UNX.lua", true))()`;
+            const rawCode = `getgenv().unxns = { loadfrom = "Website" }\nloadstring(game:HttpGet("https://api.getunx.cc/UNX.lua", true))()`;
             navigator.clipboard.writeText(rawCode).then(() => {
                 copyBtn.innerHTML = `<span>Copied!</span> <i data-lucide="check" width="20" height="20"></i>`;
                 lucide.createIcons();
