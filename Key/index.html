@@ -1,124 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNXHub - Key System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            min-height: 100vh; width: 100%; overflow-x: hidden; overflow-y: hidden;
-            font-family: 'Raleway', sans-serif; display: flex; flex-direction: column; align-items: center;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
-            color: white;
-        }
-        .background-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
-            background-size: 20px 20px; animation: walkGridDiagonal 4s linear infinite;
-        }
-        @keyframes walkGridDiagonal { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
-        .navbar {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1000px;
-            border: 1px solid transparent;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) padding-box,
-                        linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.4), rgba(0, 0, 0, 0)) border-box;
-            backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%);
-            border-radius: 16px; padding: 10px 20px;
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.8);
-            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-        }
-        .nav-left { display: flex; align-items: center; gap: 15px; }
-        .nav-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .nav-title { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: 0.5px; }
-        .menu-btn { background: none; border: none; color: white; cursor: pointer; transition: transform 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
-        .menu-btn:hover { color: #8A2BE2; transform: scale(1.1); }
-        .dropdown-menu {
-            position: absolute; top: 70px; right: 0;
-            border: 1px solid transparent;
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)) padding-box,
-                        linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.2), rgba(0, 0, 0, 0)) border-box;
-            backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
-            border-radius: 12px; padding: 10px; width: 200px; display: flex; flex-direction: column; gap: 5px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 1001;
-        }
-        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: #aaa; text-decoration: none; border-radius: 8px; transition: background 0.2s, color 0.2s; font-weight: 600; font-size: 0.95rem; }
-        .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-        .content-wrapper { 
-            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            width: 100%; max-width: 1000px; padding: 20px; text-align: center;
-        }
-        .main-title {
-            font-size: 5rem; font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px;
-            background: linear-gradient(135deg, #8A2BE2, #0000FF, #8A2BE2, #0000FF); background-size: 300% 300%;
-            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-            animation: gradientWalkDiagonal 3s linear infinite; 
-        }
-        @keyframes gradientWalkDiagonal { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
-        .subtitle { 
-            font-size: 1.2rem; max-width: 600px; color: #888; margin-bottom: 40px; line-height: 1.6;
-        }
-        .subtitle b { color: white; font-weight: 800; }
-        .purple-gradient-btn {
-            text-decoration: none;
-            padding: 16px 40px; font-size: 1.2rem; font-weight: 700; color: white; border: none; border-radius: 50px; cursor: pointer;
-            font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 1px;
-            background: linear-gradient(135deg, #6200ea, #b388ff); background-size: 200% 200%; background-position: 0% 50%;
-            transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .purple-gradient-btn:hover { background-position: 100% 50%; box-shadow: 0 0 30px rgba(179, 136, 255, 0.4); transform: translateY(-5px); }
-        .purple-gradient-btn:active { transform: translateY(0); }
-        @media (max-width: 768px) {
-            .navbar { width: 95%; top: 10px; } 
-            .main-title { font-size: 3rem; } 
-            .subtitle { font-size: 1rem; width: 90%; } 
-            .purple-gradient-btn { font-size: 1rem; padding: 14px 30px; }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UNXHub - Key System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --main: #21221d;
+    --accent: #b9c29d;
+    --outline: #34362d;
+    --bg: #121310;
+    --text: #e6e6e6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Bacasime Antique', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(33,34,29,0.9) 0%, var(--bg) 60%);
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.07) 0px, rgba(0,0,0,0.07) 1px, transparent 1px, transparent 24px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.07) 0px, rgba(0,0,0,0.07) 1px, transparent 1px, transparent 24px);
+    z-index: -1;
+    pointer-events: none;
+    animation: gridDrift 40s linear infinite;
+}
+
+@keyframes gridDrift {
+    from { transform: translate(0, 0); }
+    to { transform: translate(24px, 24px); }
+}
+
+.topbar-wrap {
+    position: fixed;
+    top: 14px;
+    left: 0;
+    right: 0;
+    width: min(980px, calc(100vw - 24px));
+    margin: 0 auto;
+    z-index: 10;
+    background: rgba(33, 34, 29, 0.45);
+    border: 1px solid rgba(52, 54, 45, 0.35);
+    border-radius: 16px;
+    backdrop-filter: blur(40px) saturate(1.3);
+    -webkit-backdrop-filter: blur(40px) saturate(1.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+}
+
+.topbar {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topbar.open {
+    height: 110px;
+}
+
+.topbar-row {
+    height: 56px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 19px;
+    letter-spacing: 0.6px;
+    line-height: 1;
+}
+
+.brand img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    display: block;
+    border-radius: 7px;
+}
+
+.menu-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.menu-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-btn span {
+    position: relative;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 999px;
+    display: block;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.menu-btn span::before,
+.menu-btn span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 999px;
+    transition: transform 0.25s ease, top 0.25s ease, opacity 0.2s ease;
+}
+
+.menu-btn span::before { top: -6px; }
+.menu-btn span::after  { top: 6px;  }
+
+.menu-btn.open span {
+    background: transparent;
+}
+
+.menu-btn.open span::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.menu-btn.open span::after {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
+.menu-links {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 12px 16px;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.topbar.open .menu-links {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.menu-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    height: 34px;
+    padding: 0 16px;
+    border: 1px solid rgba(52, 54, 45, 0.45);
+    border-radius: 9px;
+    color: var(--text);
+    text-decoration: none;
+    background: rgba(18, 19, 16, 0.35);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    font-size: 15px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.menu-link:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(185, 194, 157, 0.08);
+}
+
+.desktop-links {
+    display: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.desktop-link {
+    padding: 8px 20px;
+    border-radius: 9px;
+    color: rgba(230, 230, 230, 0.55);
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    background: transparent;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.desktop-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+@media (min-width: 720px) {
+    .topbar-wrap {
+        top: 18px;
+        border-radius: 15px;
+    }
+
+    .topbar {
+        height: 54px;
+    }
+
+    .topbar.open {
+        height: 54px;
+    }
+
+    .topbar-row {
+        height: 54px;
+        min-height: 54px;
+        padding: 0 8px 0 18px;
+    }
+
+    .brand {
+        font-size: 18px;
+        gap: 10px;
+    }
+
+    .brand img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .menu-btn {
+        display: none;
+    }
+
+    .menu-links {
+        display: none !important;
+    }
+
+    .desktop-links {
+        display: flex;
+    }
+}
+
+.container {
+    text-align: center;
+    padding: 24px;
+}
+
+.title {
+    font-size: 64px;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(185, 194, 157, 0.15);
+    animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.subtitle {
+    margin-top: 14px;
+    font-size: 17px;
+    color: rgba(230, 230, 230, 0.5);
+    line-height: 1.5;
+    animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.button {
+    margin-top: 24px;
+    display: inline-block;
+    padding: 12px 28px;
+    border: 1px solid var(--outline);
+    background: var(--main);
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Bacasime Antique', serif;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(185, 194, 157, 0.08) inset;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    background: #272822;
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(185, 194, 157, 0.08);
+}
+
+.button:active {
+    transform: scale(0.97);
+}
+
+@media (min-width: 720px) {
+    .title {
+        font-size: 100px;
+        letter-spacing: 4px;
+        text-shadow: 0 0 40px rgba(185, 194, 157, 0.12);
+    }
+
+    .subtitle {
+        margin-top: 18px;
+        font-size: 22px;
+    }
+
+    .button {
+        margin-top: 30px;
+        padding: 14px 36px;
+        font-size: 20px;
+        border-radius: 12px;
+    }
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+a, button {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+a:focus-visible, button:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.menu-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-link:active {
+    transform: scale(0.97);
+    background: rgba(185, 194, 157, 0.12);
+}
+</style>
 </head>
 <body>
-    <div class="background-grid"></div>
-    <nav class="navbar">
-        <div class="nav-left">
-            <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="Logo" class="nav-logo">
-            <span class="nav-title">UNXHub</span>
-        </div>
-        <div style="position: relative;">
-            <button class="menu-btn" id="menuToggle"><i data-lucide="menu" width="32" height="32"></i></button>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="https://getunx.qzz.io/" class="menu-item"><i data-lucide="home" width="20" height="20"></i> Home</a>
-                <a href="tos.html" class="menu-item"><i data-lucide="file-text" width="20" height="20"></i> Terms Of Service</a>
+    <div class="topbar-wrap">
+        <div class="topbar" id="topbar">
+            <div class="topbar-row">
+                <div class="brand">
+                    <img src="https://getunx.cc/Assets/Logo.png?size=64" alt="UNXHub Logo">
+                    <span>UNXHub</span>
+                </div>
+                <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+                    <span></span>
+                </button>
+                <nav class="desktop-links">
+                    <a class="desktop-link" href="https://getunx.cc/">Home</a>
+                    <a class="desktop-link" href="https://getunx.cc/tos">Terms</a>
+                    <a class="desktop-link" href="https://discord.gg/zpaMS8qUfB" target="_blank" rel="noopener">Discord</a>
+                </nav>
+            </div>
+            <div class="menu-links" id="menuLinks">
+                <a class="menu-link" href="https://getunx.cc/">Home</a>
+                <a class="menu-link" href="https://getunx.cc/tos">Terms</a>
+                <a class="menu-link" href="https://discord.gg/zpaMS8qUfB" target="_blank" rel="noopener">Discord</a>
             </div>
         </div>
-    </nav>
-    <div class="content-wrapper">
-        <h1 class="main-title">UNXHub Key</h1>
-        <p class="subtitle">
-            By doing this process, you help the developer to make <b>UNXHub</b> better!
-        </p>
-        <a href="https://link-hub.net/3002759/pyk14s0B2WwH" target="_blank" class="purple-gradient-btn">
-            Get Key <i data-lucide="external-link" width="20" height="20"></i>
-        </a>
     </div>
-    <script>
-        lucide.createIcons();
-        const menuToggle = document.getElementById('menuToggle');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        menuToggle.addEventListener('click', (e) => { 
-            e.stopPropagation(); 
-            dropdownMenu.classList.toggle('show'); 
-        });
-        document.addEventListener('click', (e) => { 
-            if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) { 
-                dropdownMenu.classList.remove('show'); 
-            } 
-        });
-    </script>
-    <script src="https://analytics.umami.is/script.js" data-website-id="545f6c41-dde0-4499-8903-71a51e89ab23" defer></script>
+
+    <div class="container">
+        <div class="title">UNXHub Key</div>
+        <div class="subtitle">By doing this process, you help the developer to make UNXHub better!</div>
+        <a href="https://link-hub.net/3002759/pyk14s0B2WwH" class="button" target="_blank" rel="noopener">Get Key</a>
+    </div>
+
+<script>
+const topbar = document.getElementById("topbar");
+const menuBtn = document.getElementById("menuBtn");
+
+menuBtn.addEventListener("click", () => {
+    const isOpen = topbar.classList.toggle("open");
+    menuBtn.classList.toggle("open", isOpen);
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
+});
+</script>
 </body>
 </html>
