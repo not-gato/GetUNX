@@ -1,142 +1,530 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - UNXHub</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            min-height: 100vh; width: 100%; overflow-x: hidden; overflow-y: auto;
-            font-family: 'Raleway', sans-serif; display: flex; flex-direction: column; align-items: center;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); color: white; padding-bottom: 50px;
-        }
-        .background-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
-            background-size: 20px 20px; animation: walkGridDiagonal 0.4s linear infinite;
-        }
-        @keyframes walkGridDiagonal { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
-        .navbar {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1000px;
-            border: 1px solid transparent;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)) padding-box, linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.4), rgba(0, 0, 0, 0)) border-box;
-            backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%);
-            border-radius: 16px; padding: 10px 20px; box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.8);
-            display: flex; justify-content: space-between; align-items: center; z-index: 1000;
-        }
-        .nav-left { display: flex; align-items: center; gap: 15px; }
-        .nav-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .nav-title { font-size: 1.5rem; font-weight: 700; color: white; letter-spacing: 0.5px; }
-        .menu-btn { background: none; border: none; color: white; cursor: pointer; transition: transform 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center; }
-        .menu-btn:hover { color: #8A2BE2; transform: scale(1.1); }
-        .dropdown-menu {
-            position: absolute; top: 70px; right: 0;
-            border: 1px solid transparent;
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)) padding-box, linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.2), rgba(0, 0, 0, 0)) border-box;
-            backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%);
-            border-radius: 12px; padding: 10px; width: 200px; display: flex; flex-direction: column; gap: 5px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 1001;
-        }
-        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: #aaa; text-decoration: none; border-radius: 8px; transition: background 0.2s, color 0.2s; font-weight: 600; font-size: 0.95rem; }
-        .menu-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-        .tos-container {
-            margin-top: 120px; width: 90%; max-width: 800px;
-            border: 1px solid transparent;
-            background: linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)) padding-box, linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(138, 43, 226, 0.4), rgba(0, 0, 0, 0)) border-box;
-            backdrop-filter: blur(30px) saturate(120%); -webkit-backdrop-filter: blur(30px) saturate(120%);
-            border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            padding: 40px; display: flex; flex-direction: column; gap: 30px;
-        }
-        .tos-header { text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 20px; margin-bottom: 10px; }
-        .tos-header h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 10px; color: white; }
-        .tos-date { font-family: 'JetBrains Mono', monospace; color: #888; font-size: 0.9rem; }
-        .tos-section { display: flex; flex-direction: column; gap: 10px; }
-        .tos-title { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; color: #b388ff; }
-        .tos-text { padding-left: 36px; color: #ccc; line-height: 1.6; font-size: 1rem; font-weight: 300; }
-        .tos-text strong { font-weight: 700; color: white; }
-        .btn-container { display: flex; justify-content: center; margin-top: 20px; }
-        .purple-gradient-btn {
-            padding: 14px 30px; font-size: 1.1rem; font-weight: 700; color: white; border: none; border-radius: 50px; cursor: pointer;
-            font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
-            background: linear-gradient(135deg, #6200ea, #b388ff); background-size: 200% 200%; background-position: 0% 50%;
-            transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        .purple-gradient-btn:hover { background-position: 100% 50%; box-shadow: 0 0 30px rgba(179, 136, 255, 0.4); transform: translateY(-2px); }
-        @media (max-width: 768px) { .navbar { width: 95%; top: 10px; } .tos-container { width: 95%; padding: 20px; } .tos-header h1 { font-size: 2rem; } }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UNXHub - Terms of Service</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bacasime+Antique&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --main: #21221d;
+    --accent: #b9c29d;
+    --outline: #34362d;
+    --bg: #121310;
+    --text: #e6e6e6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Bacasime Antique', serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(33,34,29,0.9) 0%, var(--bg) 60%);
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.07) 0px, rgba(0,0,0,0.07) 1px, transparent 1px, transparent 24px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.07) 0px, rgba(0,0,0,0.07) 1px, transparent 1px, transparent 24px);
+    z-index: -1;
+    pointer-events: none;
+    animation: gridDrift 40s linear infinite;
+}
+
+@keyframes gridDrift {
+    from { transform: translate(0, 0); }
+    to { transform: translate(24px, 24px); }
+}
+
+.topbar-wrap {
+    position: fixed;
+    top: 14px;
+    left: 0;
+    right: 0;
+    width: min(980px, calc(100vw - 24px));
+    margin: 0 auto;
+    z-index: 10;
+    background: rgba(33, 34, 29, 0.45);
+    border: 1px solid rgba(52, 54, 45, 0.35);
+    border-radius: 16px;
+    backdrop-filter: blur(40px) saturate(1.3);
+    -webkit-backdrop-filter: blur(40px) saturate(1.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+}
+
+.topbar {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.topbar.open {
+    height: 110px;
+}
+
+.topbar-row {
+    height: 56px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 19px;
+    letter-spacing: 0.6px;
+    line-height: 1;
+}
+
+.brand img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    display: block;
+    border-radius: 7px;
+}
+
+.menu-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+.menu-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-btn span {
+    position: relative;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 999px;
+    display: block;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.menu-btn span::before,
+.menu-btn span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 999px;
+    transition: transform 0.25s ease, top 0.25s ease, opacity 0.2s ease;
+}
+
+.menu-btn span::before { top: -6px; }
+.menu-btn span::after  { top: 6px;  }
+
+.menu-btn.open span {
+    background: transparent;
+}
+
+.menu-btn.open span::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.menu-btn.open span::after {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
+.menu-links {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 12px 16px;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.topbar.open .menu-links {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.menu-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    height: 34px;
+    padding: 0 16px;
+    border: 1px solid rgba(52, 54, 45, 0.45);
+    border-radius: 9px;
+    color: var(--text);
+    text-decoration: none;
+    background: rgba(18, 19, 16, 0.35);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    font-size: 15px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.menu-link:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(185, 194, 157, 0.08);
+}
+
+.desktop-links {
+    display: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.desktop-link {
+    padding: 8px 20px;
+    border-radius: 9px;
+    color: rgba(230, 230, 230, 0.55);
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    background: transparent;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.desktop-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+@media (min-width: 720px) {
+    .topbar-wrap {
+        top: 18px;
+        border-radius: 15px;
+    }
+
+    .topbar {
+        height: 54px;
+    }
+
+    .topbar.open {
+        height: 54px;
+    }
+
+    .topbar-row {
+        height: 54px;
+        min-height: 54px;
+        padding: 0 8px 0 18px;
+    }
+
+    .brand {
+        font-size: 18px;
+        gap: 10px;
+    }
+
+    .brand img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .menu-btn {
+        display: none;
+    }
+
+    .menu-links {
+        display: none !important;
+    }
+
+    .desktop-links {
+        display: flex;
+    }
+}
+
+.hero {
+    text-align: center;
+    padding: 24px;
+    margin-top: 120px;
+}
+
+.hero-title {
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(185, 194, 157, 0.15);
+    animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.terms-wrap {
+    width: min(720px, calc(100vw - 32px));
+    margin: 40px auto 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.term-card {
+    background: rgba(33, 34, 29, 0.5);
+    border: 1px solid rgba(52, 54, 45, 0.35);
+    border-radius: 14px;
+    padding: 22px 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+
+.term-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.term-card:hover {
+    border-color: rgba(52, 54, 45, 0.6);
+}
+
+.term-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.term-line {
+    width: 3px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.term-title {
+    font-size: 19px;
+    color: var(--text);
+    letter-spacing: 0.4px;
+}
+
+.term-body {
+    font-size: 15px;
+    color: rgba(230, 230, 230, 0.5);
+    line-height: 1.7;
+}
+
+.term-updated {
+    text-align: center;
+    font-size: 13px;
+    color: rgba(230, 230, 230, 0.25);
+    margin-top: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.term-updated.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (min-width: 720px) {
+    .hero {
+        margin-top: 140px;
+    }
+
+    .hero-title {
+        font-size: 80px;
+        letter-spacing: 4px;
+    }
+
+    .terms-wrap {
+        margin: 50px auto 100px;
+        gap: 16px;
+    }
+
+    .term-card {
+        padding: 28px 28px;
+        border-radius: 16px;
+    }
+
+    .term-title {
+        font-size: 21px;
+    }
+
+    .term-body {
+        font-size: 16px;
+    }
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+a, button {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+a:focus-visible, button:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.menu-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-link:active {
+    transform: scale(0.97);
+    background: rgba(185, 194, 157, 0.12);
+}
+</style>
 </head>
 <body>
-    <div class="background-grid"></div>
-    <nav class="navbar">
-        <div class="nav-left">
-            <img src="https://raw.githubusercontent.com/not-gato/GetUNX/refs/heads/main/Assets/170%20Sem%20T%C3%ADtulo_20251118102930.png" alt="Logo" class="nav-logo">
-            <span class="nav-title">UNXHub</span>
-        </div>
-        <div style="position: relative;">
-            <button class="menu-btn" id="menuToggle"><i data-lucide="menu" width="32" height="32"></i></button>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a href="https://getunx.qzz.io/" class="menu-item"><i data-lucide="home" width="20" height="20"></i> Home</a>
-                <a href="tos.html" class="menu-item"><i data-lucide="file-text" width="20" height="20"></i> Terms Of Service</a>
+    <div class="topbar-wrap">
+        <div class="topbar" id="topbar">
+            <div class="topbar-row">
+                <div class="brand">
+                    <img src="https://getunx.cc/Assets/Logo.png?size=64" alt="UNXHub Logo">
+                    <span>UNXHub</span>
+                </div>
+                <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+                    <span></span>
+                </button>
+                <nav class="desktop-links">
+                    <a class="desktop-link" href="https://getunx.cc/">Home</a>
+                    <a class="desktop-link" href="https://getunx.cc/tos">Terms</a>
+                    <a class="desktop-link" href="https://discord.gg/zpaMS8qUfB" target="_blank" rel="noopener">Discord</a>
+                </nav>
             </div>
-        </div>
-    </nav>
-    <div class="tos-container">
-        <div class="tos-header">
-            <h1>Terms of Service</h1>
-            <div class="tos-date">Effective Date: January 19, 2026</div>
-        </div>
-        <div class="tos-section">
-            <div class="tos-title"><i data-lucide="info" width="24" height="24"></i> Introduction</div>
-            <div class="tos-text">
-                Welcome to <strong>UNXHub</strong> ("Service"), a fast and open-source script hub. By accessing or using the Service, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the Service.<br><br>
-                UNXHub is built on the principle of transparency and community growth. We provide our source code freely to encourage learning and innovation.
+            <div class="menu-links" id="menuLinks">
+                <a class="menu-link" href="https://getunx.cc/">Home</a>
+                <a class="menu-link" href="https://getunx.cc/tos">Terms</a>
+                <a class="menu-link" href="https://discord.gg/zpaMS8qUfB" target="_blank" rel="noopener">Discord</a>
             </div>
-        </div>
-        <div class="tos-section">
-            <div class="tos-title"><i data-lucide="terminal" width="24" height="24"></i> Use of the Service</div>
-            <div class="tos-text">
-                You may use the Service to access, download, and execute scripts provided through UNXHub.<br>
-                The source code is open for modification and personal use.<br>
-                You are encouraged to learn from our codebase and integrate its logic into your own unique projects.
-            </div>
-        </div>
-        <div class="tos-section">
-            <div class="tos-title"><i data-lucide="shield" width="24" height="24"></i> Intellectual Property</div>
-            <div class="tos-text">
-                UNXHub is open source, however, redistribution is governed by specific rules: If you use the UNXHub source code for your own project or service, you <strong>MUST</strong> include clear credits to the original UNXHub project. Furthermore, you must make significant changes or improvements (for example, redesigning the UI or adding new features).<br><br>
-                You are strictly prohibited from taking the UNXHub codebase and simply re-uploading or hosting it under a different name without modification. "Copy-pasting" the project to claim it as your own is a violation of these terms.
-            </div>
-        </div>
-        <div class="tos-section">
-            <div class="tos-title"><i data-lucide="alert-triangle" width="24" height="24"></i> Disclaimers & Liability</div>
-            <div class="tos-text">
-                The Service is provided "as is" without warranties of any kind. We are not liable for any damage, bans, terminations, or consequences from using the scripts — you use them entirely at your own risk.
-            </div>
-        </div>
-        <div class="tos-section">
-            <div class="tos-title"><i data-lucide="ban" width="24" height="24"></i> Termination</div>
-            <div class="tos-text">
-                We reserve the right to restrict access or take action against individuals who violate our redistribution policies or fail to provide proper attribution.
-            </div>
-        </div>
-        <div class="tos-date" style="text-align: center; margin-top: 10px;">Last Updated: January 19, 2026</div>
-        <div class="btn-container">
-            <a href="https://getunx.qzz.io/" class="purple-gradient-btn">Go Back Home</a>
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-        const menuToggle = document.getElementById('menuToggle');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); dropdownMenu.classList.toggle('show'); });
-        document.addEventListener('click', (e) => { if (!dropdownMenu.contains(e.target) && !menuToggle.contains(e.target)) { dropdownMenu.classList.remove('show'); } });
-    </script>
+
+    <div class="hero">
+        <div class="hero-title">Terms of Service</div>
+    </div>
+
+    <div class="terms-wrap">
+        <div class="term-card">
+            <div class="term-header">
+                <div class="term-line"></div>
+                <div class="term-title">Introduction</div>
+            </div>
+            <div class="term-body">Welcome to UNXHub ("Service"), a fast and open-source script hub. By accessing or using the Service, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the Service. UNXHub is built on the principle of transparency and community growth. We provide our source code freely to encourage learning and innovation.</div>
+        </div>
+
+        <div class="term-card">
+            <div class="term-header">
+                <div class="term-line"></div>
+                <div class="term-title">Use of the Service</div>
+            </div>
+            <div class="term-body">You may use the Service to access, download, and execute scripts provided through UNXHub. The source code is open for modification and personal use. You are encouraged to learn from our codebase and integrate its logic into your own unique projects.</div>
+        </div>
+
+        <div class="term-card">
+            <div class="term-header">
+                <div class="term-line"></div>
+                <div class="term-title">Intellectual Property</div>
+            </div>
+            <div class="term-body">UNXHub is open source, however, redistribution is governed by specific rules: If you use the UNXHub source code for your own project or service, you MUST include clear credits to the original UNXHub project. Furthermore, you must make significant changes or improvements (for example, redesigning the UI or adding new features). You are strictly prohibited from taking the UNXHub codebase and simply re-uploading or hosting it under a different name without modification. "Copy-pasting" the project to claim it as your own is a violation of these terms.</div>
+        </div>
+
+        <div class="term-card">
+            <div class="term-header">
+                <div class="term-line"></div>
+                <div class="term-title">Disclaimers &amp; Liability</div>
+            </div>
+            <div class="term-body">The Service is provided "as is" without warranties of any kind. We are not liable for any damage, bans, terminations, or consequences from using the scripts — you use them entirely at your own risk.</div>
+        </div>
+
+        <div class="term-card">
+            <div class="term-header">
+                <div class="term-line"></div>
+                <div class="term-title">Termination</div>
+            </div>
+            <div class="term-body">We reserve the right to restrict access or take action against individuals who violate our redistribution policies or fail to provide proper attribution.</div>
+        </div>
+
+        <div class="term-updated">Last Updated: April 8, 2026</div>
+    </div>
+
+<script>
+const topbar = document.getElementById("topbar");
+const menuBtn = document.getElementById("menuBtn");
+
+menuBtn.addEventListener("click", () => {
+    const isOpen = topbar.classList.toggle("open");
+    menuBtn.classList.toggle("open", isOpen);
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
+});
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.term-card, .term-updated').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+    observer.observe(el);
+});
+</script>
 </body>
 </html>
